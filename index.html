@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en" data-brand="woo-sprint">
+<!-- <html lang="en" data-brand="super-dirtcar"> -->
+  <!-- <html lang="en" data-brand="woo-latemodel"> -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>World of Outlaws Sprint Cars — DIRTcar Racing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- LAYER 2: Fixed graded background — z-index: 0. Never scrolls. -->
+  <div class="layer-bg" aria-hidden="true"></div>
+
+  <!-- LAYER 1A: Left rail — DATA frame. position:fixed, always visible. -->
+  <aside class="rail" aria-label="Season data">
+
+    <div class="rail__logo">
+      <span class="rail__logo-wordmark">WoO SPRINT</span>
+    </div>
+
+    <div class="rail__ticker">
+      <p class="rail__eyebrow">NEXT RACE</p>
+      <p class="rail__race-name u-truncate">KNOXVILLE NATIONALS</p>
+      <div class="countdown" id="countdown" aria-label="Time until race start" aria-live="off">
+        <span class="countdown__segment">
+          <span class="countdown__digits u-mono-num" id="cd-days">00</span>
+          <span class="countdown__unit u-label">D</span>
+        </span>
+        <span class="countdown__colon" aria-hidden="true">:</span>
+        <span class="countdown__segment">
+          <span class="countdown__digits u-mono-num" id="cd-hours">00</span>
+          <span class="countdown__unit u-label">H</span>
+        </span>
+        <span class="countdown__colon" aria-hidden="true">:</span>
+        <span class="countdown__segment">
+          <span class="countdown__digits u-mono-num" id="cd-mins">00</span>
+          <span class="countdown__unit u-label">M</span>
+        </span>
+        <span class="countdown__colon" aria-hidden="true">:</span>
+        <span class="countdown__segment">
+          <span class="countdown__digits u-mono-num" id="cd-secs">00</span>
+          <span class="countdown__unit u-label">S</span>
+        </span>
+      </div>
+    </div>
+
+    <nav class="rail__schedule" aria-label="Upcoming races">
+      <h2 class="rail__section-heading u-label">UPCOMING RACES</h2>
+      <ul class="rail__race-list" role="list">
+        <li class="rail__race-item rail__race-item--next">
+          <span class="rail__race-dot" aria-hidden="true"></span>
+          <span class="rail__race-date u-mono-num">JUL 9</span>
+          <span class="rail__race-track u-truncate">Knoxville, IA</span>
+        </li>
+        <li class="rail__race-item">
+          <span class="rail__race-date u-mono-num">JUL 16</span>
+          <span class="rail__race-track u-truncate">Eldora, OH</span>
+        </li>
+        <li class="rail__race-item">
+          <span class="rail__race-date u-mono-num">JUL 23</span>
+          <span class="rail__race-track u-truncate">Lernerville, PA</span>
+        </li>
+        <li class="rail__race-item">
+          <span class="rail__race-date u-mono-num">JUL 30</span>
+          <span class="rail__race-track u-truncate">Haubstadt, IN</span>
+        </li>
+        <li class="rail__race-item">
+          <span class="rail__race-date u-mono-num">AUG 6</span>
+          <span class="rail__race-track u-truncate">Williams Grove, PA</span>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="rail__standings" aria-label="Points leaders">
+      <h2 class="rail__section-heading u-label">POINTS LEADERS</h2>
+      <ol class="rail__standings-list">
+        <li class="rail__standings-item">
+          <span class="rail__standings-pos">1</span>
+          <span class="rail__standings-name u-truncate">D. SCHATZ</span>
+          <span class="rail__standings-pts u-mono-num">1,240</span>
+        </li>
+        <li class="rail__standings-item">
+          <span class="rail__standings-pos">2</span>
+          <span class="rail__standings-name u-truncate">K. MADSEN</span>
+          <span class="rail__standings-pts u-mono-num">1,190</span>
+        </li>
+        <li class="rail__standings-item">
+          <span class="rail__standings-pos">3</span>
+          <span class="rail__standings-name u-truncate">G. LOGAN</span>
+          <span class="rail__standings-pts u-mono-num">1,155</span>
+        </li>
+      </ol>
+    </div>
+
+    <div class="rail__cta-wrap">
+      <a href="#" class="btn rail__cta">BUY TICKETS</a>
+    </div>
+
+  </aside>
+
+  <!-- LAYER 1B: Top pill header — NAVIGATION frame. Spans right column, collapses on scroll. -->
+  <header class="pill-header" id="pill-header">
+    <div class="pill-header__inner">
+
+      <!-- WATCH LIVE: persists in both pill states when isLive=true. .pill-header--has-live set by JS. -->
+      <a href="https://dirtvision.com"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="pill-watch-live"
+         id="pill-watch-live"
+         aria-label="Watch live racing on DIRTVision, opens in new tab"
+         tabindex="-1">
+        <span class="pill-watch-live__dot" aria-hidden="true"></span>
+        WATCH LIVE
+      </a>
+
+      <!-- Logomark: collapsed state only -->
+      <span class="pill-header__logomark" aria-hidden="true">WoO</span>
+
+      <!-- Primary nav: expanded state only — collapses into drawer on scroll -->
+      <nav class="pill-nav" aria-label="Primary navigation">
+        <a href="#schedule" class="pill-nav__link">SCHEDULE</a>
+        <a href="#standings" class="pill-nav__link">STANDINGS</a>
+        <a href="#drivers" class="pill-nav__link">DRIVERS</a>
+        <a href="#media" class="pill-nav__link">MEDIA</a>
+      </nav>
+
+      <!-- CTA: always visible in both states -->
+      <a href="#" class="btn pill-header__cta-btn">TICKETS</a>
+
+      <!-- Hamburger: collapsed state only -->
+      <button class="pill-header__hamburger"
+              aria-label="Open navigation menu"
+              aria-expanded="false"
+              aria-controls="nav-drawer"
+              tabindex="-1">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+
+    </div>
+  </header>
+
+  <!-- Mobile / collapsed nav drawer -->
+  <dialog class="nav-drawer" id="nav-drawer" aria-label="Navigation menu">
+    <button class="nav-drawer__close" aria-label="Close navigation menu">&#x2715;</button>
+    <nav class="nav-drawer__nav" aria-label="Site navigation">
+      <a href="#schedule" class="nav-drawer__link">SCHEDULE</a>
+      <a href="#standings" class="nav-drawer__link">STANDINGS</a>
+      <a href="#drivers" class="nav-drawer__link">DRIVERS</a>
+      <a href="#media" class="nav-drawer__link">MEDIA</a>
+    </nav>
+    <div class="nav-drawer__data">
+      <p class="nav-drawer__placeholder">[Upcoming races — placeholder]</p>
+      <p class="nav-drawer__placeholder">[Points leaders — placeholder]</p>
+    </div>
+  </dialog>
+
+  <!-- LAYER 3: Scrolling content — z-index: 10, margin-left: 320px on desktop -->
+  <main class="content-channel">
+
+    <!-- LAYER 3.1: Hero — Most Recent Winner Carousel -->
+    <!-- PRODUCTION: slide data from WRG-PublicApi race-results endpoint -->
+    <section class="hero" id="hero" aria-label="Recent race winners">
+      <div class="hero__track">
+
+        <article class="hero__slide hero__slide--active"
+                 id="hero-slide-0"
+                 aria-roledescription="slide"
+                 aria-label="Slide 1 of 4: Donny Schatz">
+          <!-- PLACEHOLDER driver photo — production: real driver action photo at speed -->
+          <div class="hero__photo" aria-hidden="true"></div>
+          <div class="hero__grad" aria-hidden="true"></div>
+          <div class="hero__content" data-initial>
+            <p class="hero__eyebrow">KNOXVILLE NATIONALS · KNOXVILLE, IA</p>
+            <h2 class="hero__name">DONNY SCHATZ</h2>
+            <a href="#" class="btn hero__cta">VIEW RESULTS</a>
+          </div>
+        </article>
+
+        <article class="hero__slide"
+                 id="hero-slide-1"
+                 aria-roledescription="slide"
+                 aria-label="Slide 2 of 4: Brad Sweet"
+                 aria-hidden="true">
+          <!-- PLACEHOLDER driver photo — production: real driver action photo at speed -->
+          <div class="hero__photo" aria-hidden="true"></div>
+          <div class="hero__grad" aria-hidden="true"></div>
+          <div class="hero__content">
+            <p class="hero__eyebrow">DIRT SUMMER NATIONALS · ELDORA, OH</p>
+            <h2 class="hero__name">BRAD SWEET</h2>
+            <a href="#" class="btn hero__cta">VIEW RESULTS</a>
+          </div>
+        </article>
+
+        <article class="hero__slide"
+                 id="hero-slide-2"
+                 aria-roledescription="slide"
+                 aria-label="Slide 3 of 4: Kerry Madsen"
+                 aria-hidden="true">
+          <!-- PLACEHOLDER driver photo — production: real driver action photo at speed -->
+          <div class="hero__photo" aria-hidden="true"></div>
+          <div class="hero__grad" aria-hidden="true"></div>
+          <div class="hero__content">
+            <p class="hero__eyebrow">WILLIAMS GROVE 410 SPRINT · WILLIAMS GROVE, PA</p>
+            <h2 class="hero__name">KERRY MADSEN</h2>
+            <a href="#" class="btn hero__cta">VIEW RESULTS</a>
+          </div>
+        </article>
+
+        <article class="hero__slide"
+                 id="hero-slide-3"
+                 aria-roledescription="slide"
+                 aria-label="Slide 4 of 4: Sheldon Haudenschild"
+                 aria-hidden="true">
+          <!-- PLACEHOLDER driver photo — production: real driver action photo at speed -->
+          <div class="hero__photo" aria-hidden="true"></div>
+          <div class="hero__grad" aria-hidden="true"></div>
+          <div class="hero__content">
+            <p class="hero__eyebrow">DIRT CLASSIC · TULSA, OK</p>
+            <h2 class="hero__name">SHELDON HAUDENSCHILD</h2>
+            <a href="#" class="btn hero__cta">VIEW RESULTS</a>
+          </div>
+        </article>
+
+      </div>
+
+      <div class="hero__dots" role="group" aria-label="Slide navigation">
+        <button class="hero__dot hero__dot--active"
+                aria-label="Slide 1: Donny Schatz"
+                aria-pressed="true"></button>
+        <button class="hero__dot"
+                aria-label="Slide 2: Brad Sweet"
+                aria-pressed="false"
+                tabindex="-1"></button>
+        <button class="hero__dot"
+                aria-label="Slide 3: Kerry Madsen"
+                aria-pressed="false"
+                tabindex="-1"></button>
+        <button class="hero__dot"
+                aria-label="Slide 4: Sheldon Haudenschild"
+                aria-pressed="false"
+                tabindex="-1"></button>
+      </div>
+    </section>
+
+    <!-- Scroll sentinel: IntersectionObserver target for pill collapse trigger -->
+    <div class="scroll-sentinel" id="scroll-sentinel" aria-hidden="true"></div>
+
+    <!-- Clay-groove divider sample — renders between hero and floating blocks -->
+    <div class="clay-divider" aria-hidden="true"></div>
+
+    <section class="placeholder-section" id="schedule" aria-label="Floating blocks (placeholder)">
+      <p class="placeholder-section__label u-label">FLOATING BLOCKS</p>
+    </section>
+
+    <section class="placeholder-section" id="standings" aria-label="Standings (placeholder)">
+      <p class="placeholder-section__label u-label">STANDINGS</p>
+    </section>
+
+    <section class="placeholder-section" aria-label="Season stats (placeholder)">
+      <p class="placeholder-section__label u-label">SEASON STATS</p>
+    </section>
+
+    <section class="placeholder-section" id="media" aria-label="News (placeholder)">
+      <p class="placeholder-section__label u-label">NEWS</p>
+    </section>
+
+  </main>
+
+  <footer class="site-footer" aria-label="Site footer">
+    <p class="site-footer__placeholder u-label">FOOTER — PLACEHOLDER</p>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

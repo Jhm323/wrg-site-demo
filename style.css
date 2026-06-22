@@ -1,0 +1,1049 @@
+/* ============================================================
+   DESIGN TOKENS
+   Custom properties — the only place hex values are allowed.
+   Component rules reference var(--dc-*) and var(--brand-*) only.
+   ============================================================ */
+
+:root {
+  /* Structural neutrals — warm bias, NCS Y50R family */
+  --dc-black:      #0D0D0D;
+  --dc-clay:       #3A2418;
+  --dc-yellow:     #F4B400;
+  --dc-red:        #C8102E;
+  --dc-bone:       #EDE8DD;
+  --dc-track-gray: #8C8579;
+
+  /* Typography families */
+  --font-display: 'Anton', sans-serif;
+  --font-label:   'Oswald', sans-serif;
+  --font-body:    'Inter', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Layout dimensions */
+  --rail-width:    320px;
+  --pill-top:      16px;
+  --pill-pad-x:    24px;
+  --mobile-bar-h:  56px;
+}
+
+/* Brand skins — hex values sourced from racing_entity DB table. Do not alter. */
+
+[data-brand="woo-sprint"] {
+  /* World of Outlaws Sprint Car Series — racing_entity_ID 91 */
+  --brand-primary:   #0C7ABF;
+  --brand-secondary: #F37937;
+  --brand-base:      #0D0D0D;
+}
+
+[data-brand="woo-latemodel"] {
+  /* World of Outlaws Late Model Series — racing_entity_ID 90 */
+  --brand-primary:   #FFDE00;
+  --brand-secondary: #000000;
+  --brand-base:      #0D0D0D;
+}
+
+[data-brand="super-dirtcar"] {
+  /* Super DIRTcar Series — racing_entity_ID 8 */
+  --brand-primary:   #EB1C25;
+  /* WARNING: #EB1C25 on --dc-black = 4.35:1 contrast. Passes large-text AA (3:1)
+     only. Never use --brand-primary as body-weight text in this skin. */
+  --brand-secondary: #F4B400;  /* DERIVED — no secondary_HTML_color in DB; placeholder */
+  --brand-base:      #0D0D0D;
+}
+
+
+/* ============================================================
+   RESETS
+   ============================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--dc-black);
+  color: var(--dc-bone);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.625;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+/* Anton — display headlines, uppercase only, never below 24px */
+/* Oswald — labels, nav items, eyebrows, max 14px in label contexts */
+/* Inter — body copy */
+/* JetBrains Mono — stats, timing, countdown digits */
+
+/* Global focus-visible: --dc-yellow outline on all interactive elements */
+:focus-visible {
+  outline: 2px solid var(--dc-yellow);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+
+/* ============================================================
+   LAYOUT — Three-Layer Depth System
+   ============================================================
+
+   Layer 2  z-index: 0   position:fixed  — graded background, never scrolls
+   Layer 1A z-index: 30  position:fixed  — left rail, DATA frame
+   Layer 1B z-index: 30  position:fixed  — pill header, NAVIGATION frame
+   Layer 3  z-index: 10  normal flow     — scrolling content channel
+
+   ============================================================ */
+
+/* --- Layer 2: Fixed graded background --- */
+/* iOS Safari note: background-attachment:fixed does not render on iOS Safari.
+   Layer 2 degrades to a static (scrolling) background on that platform.
+   The three-layer depth model becomes two-layer on iOS mobile. */
+.layer-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  /* Load-failure fallback: token-based warm gradient visible if ::before image fails */
+  background: linear-gradient(150deg, var(--dc-clay) 0%, var(--dc-black) 100%);
+}
+
+/* Salzburgring treatment: real race-action photo + sepia/brown grade.
+   filter applied to ::before only — vignette (::after) is unaffected. */
+.layer-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* PLACEHOLDER — swap for real WRG race-action photo (car at speed, dirt oval, night) */
+  background-image: url('https://picsum.photos/seed/dirtcar/1920/1080');
+  background-size: cover;
+  background-position: center 30%;
+  /* Sepia/brown grade: pushes vivid photo colors toward warm desaturated tone.
+     Result: recognizable photo texture with brownish, moody, race-night quality.
+     Adjust sepia() and saturate() together — both are needed to kill chroma fully. */
+  filter: sepia(0.75) saturate(0.55) brightness(0.60);
+}
+
+/* Edge vignette — darkens perimeter ~60–80% for Layer 3 text legibility */
+.layer-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 85% 85% at 50% 40%,
+    transparent 30%,
+    color-mix(in srgb, var(--dc-black) 55%, transparent) 70%,
+    color-mix(in srgb, var(--dc-black) 82%, transparent) 100%
+  );
+}
+
+/* --- Layer 1A: Left rail --- */
+.rail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: var(--rail-width);
+  height: 100vh;
+  z-index: 30;
+  background: var(--dc-black);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+}
+
+/* --- Layer 1B: Top pill header --- */
+/* Spans right content column only: left: var(--rail-width) to right: 0 */
+.pill-header {
+  position: fixed;
+  left: var(--rail-width);
+  right: 0;
+  top: var(--pill-top);
+  z-index: 30;
+  padding: 0 var(--pill-pad-x);
+  pointer-events: none;
+}
+
+.pill-header__inner {
+  width: 100%;
+  max-width: 1200px; /* explicit value — allows transition to max-width: 240px */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: rgba(13, 13, 13, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+  border-radius: 9999px;
+  padding: 10px 20px;
+  pointer-events: all;
+  overflow: hidden;
+}
+
+/* --- Layer 3: Scrolling content --- */
+.content-channel {
+  position: relative;
+  z-index: 10;
+  margin-left: var(--rail-width);
+}
+
+.site-footer {
+  position: relative;
+  z-index: 10;
+  margin-left: var(--rail-width);
+  background: var(--dc-clay);
+  padding: 48px 48px 56px;
+}
+
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+
+/* --- Rail: Logo module --- */
+.rail__logo {
+  flex-shrink: 0;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+}
+
+.rail__logo-wordmark {
+  font-family: var(--font-display);
+  font-size: 22px;
+  text-transform: uppercase;
+  color: var(--brand-primary);
+  letter-spacing: -0.25px;
+  display: block;
+}
+
+/* --- Rail: Ticker module (countdown + next race) --- */
+.rail__ticker {
+  flex-shrink: 0;
+  padding: 14px 24px 18px;
+  background: color-mix(in srgb, var(--brand-primary) 7%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+}
+
+.rail__eyebrow {
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--brand-primary);
+  margin-bottom: 3px;
+}
+
+.rail__race-name {
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  margin-bottom: 10px;
+}
+
+.countdown {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.countdown__segment {
+  display: flex;
+  align-items: baseline;
+  gap: 1px;
+}
+
+.countdown__digits {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--dc-bone);
+  line-height: 1;
+  min-width: 2ch;
+  display: inline-block;
+}
+
+.countdown__unit {
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-bottom: 1px;
+}
+
+.countdown__colon {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--dc-track-gray);
+  margin: 0 2px;
+  line-height: 1;
+  align-self: center;
+  user-select: none;
+}
+
+/* --- Rail: Schedule module (internally scrollable) --- */
+.rail__schedule {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 24px;
+  border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--dc-track-gray) 40%, transparent) transparent;
+}
+
+.rail__section-heading {
+  font-size: 10px;
+  letter-spacing: 2.5px;
+  margin-bottom: 12px;
+}
+
+.rail__race-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.rail__race-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rail__race-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--brand-primary);
+  flex-shrink: 0;
+  opacity: 0;
+}
+
+.rail__race-item--next .rail__race-dot {
+  opacity: 1;
+}
+
+.rail__race-date {
+  font-size: 11px;
+  color: var(--dc-track-gray);
+  flex-shrink: 0;
+  min-width: 44px;
+}
+
+.rail__race-item--next .rail__race-date {
+  color: var(--dc-bone);
+}
+
+.rail__race-track {
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dc-track-gray);
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+}
+
+.rail__race-item--next .rail__race-track {
+  color: var(--dc-bone);
+}
+
+/* --- Rail: Standings module --- */
+.rail__standings {
+  flex-shrink: 0;
+  padding: 16px 24px;
+  border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+}
+
+.rail__standings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.rail__standings-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rail__standings-pos {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--brand-secondary);
+  flex-shrink: 0;
+  min-width: 16px;
+  line-height: 1;
+}
+
+.rail__standings-name {
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.25px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  flex: 1;
+}
+
+.rail__standings-pts {
+  font-size: 12px;
+  color: var(--dc-track-gray);
+  flex-shrink: 0;
+}
+
+/* --- Rail: CTA module (pinned bottom) --- */
+.rail__cta-wrap {
+  flex-shrink: 0;
+  padding: 18px 24px;
+}
+
+.rail__cta {
+  width: 100%;
+}
+
+/* --- Button --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--dc-black);
+  background: var(--brand-primary);
+  border-radius: 9999px;
+  padding: 10px 22px;
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+}
+
+/* --- Pill header: expanded state (default) --- */
+
+/* Logomark: invisible and inert when expanded */
+.pill-header__logomark {
+  font-family: var(--font-display);
+  font-size: 16px;
+  text-transform: uppercase;
+  color: var(--brand-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* Nav: visible when expanded */
+.pill-nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  overflow: hidden;
+  flex: 1;
+  max-width: 600px; /* explicit value — allows transition to max-width: 0 */
+  opacity: 1;
+}
+
+.pill-nav__link {
+  font-family: var(--font-label);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  white-space: nowrap;
+}
+
+.pill-nav__link:hover {
+  color: var(--brand-primary);
+}
+
+/* CTA: always visible */
+.pill-header__cta-btn {
+  flex-shrink: 0;
+}
+
+/* Hamburger: invisible and inert when expanded */
+.pill-header__hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  padding: 0;
+}
+
+.pill-header__hamburger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--dc-bone);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* --- WATCH LIVE button (collapsed pill + isLive only) --- */
+/* .pill-header--has-live is added by JS when isLive === true.
+   Button is hidden by default; visible in BOTH pill states when live. */
+.pill-watch-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-label);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  background: color-mix(in srgb, var(--brand-primary) 12%, var(--dc-black));
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 40%, transparent);
+  border-radius: 9999px;
+  padding: 7px 14px;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  /* Hidden by default — shown whenever .pill-header--has-live is present */
+  max-width: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pill-watch-live__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--dc-red); /* structural "live" signal — never brand-adaptive */
+  flex-shrink: 0;
+}
+
+/* Live dot pulse: added under no-preference below.
+   Under reduced-motion: dot is visible and static (paused). */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1;    }
+  50%       { opacity: 0.25; }
+}
+
+/* --- Pill header: collapsed state --- */
+/* Class toggled by IntersectionObserver in script.js when sentinel exits viewport */
+.pill-header--collapsed .pill-header__inner {
+  max-width: 440px;
+  justify-content: flex-start;
+  gap: 12px;  /* tighten gap in collapsed state; zero-width nav still occupies two gap slots */
+}
+
+.pill-header--collapsed .pill-header__logomark {
+  max-width: 80px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pill-header--collapsed .pill-nav {
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  flex: 0 0 auto;
+}
+
+.pill-header--collapsed .pill-header__hamburger {
+  max-width: 44px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* WATCH LIVE: visible whenever live — persists across both expanded and collapsed pill states */
+.pill-header--has-live .pill-watch-live {
+  max-width: 180px;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Pill transitions — decorative, suppressed under reduced-motion.
+   Pill collapse still fires under reduced-motion (functional state change);
+   only the easing animation is suppressed — it snaps instantly. */
+@media (prefers-reduced-motion: no-preference) {
+  .pill-header__inner {
+    transition: max-width 250ms ease;
+  }
+
+  .pill-header__logomark,
+  .pill-nav,
+  .pill-header__hamburger,
+  .pill-watch-live {
+    transition: max-width 250ms ease, opacity 220ms ease;
+  }
+
+  .pill-watch-live__dot {
+    animation: live-pulse 1.2s ease-in-out infinite;
+  }
+}
+
+/* --- Nav drawer (mobile + collapsed hamburger) --- */
+.nav-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  border: none;
+  margin: 0;
+  padding: 24px;
+  background: var(--dc-black);
+  color: var(--dc-bone);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  overflow-y: auto;
+}
+
+.nav-drawer:not([open]) {
+  display: none;
+}
+
+.nav-drawer::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.nav-drawer__close {
+  align-self: flex-end;
+  font-size: 18px;
+  color: var(--dc-track-gray);
+  padding: 8px;
+  line-height: 1;
+  border-radius: 4px;
+}
+
+.nav-drawer__close:hover {
+  color: var(--dc-bone);
+}
+
+.nav-drawer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.nav-drawer__link {
+  font-family: var(--font-display);
+  font-size: 36px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 1.1;
+}
+
+.nav-drawer__link:hover {
+  color: var(--brand-primary);
+}
+
+.nav-drawer__data {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+}
+
+.nav-drawer__placeholder {
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--dc-track-gray);
+}
+
+/* --- Scroll sentinel --- */
+.scroll-sentinel {
+  height: 1px;
+  margin-bottom: -1px;
+  pointer-events: none;
+}
+
+/* --- Placeholder sections (Layer 3 shell) --- */
+.placeholder-section {
+  height: 80vh;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(13, 13, 13, 0.70);
+  border-bottom: 1px dashed color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+  position: relative;
+}
+
+.placeholder-section__label {
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: color-mix(in srgb, var(--dc-track-gray) 55%, transparent); /* overrides .u-label */
+  user-select: none;
+}
+
+/* --- Hero carousel (Layer 3.1) --- */
+/* PRODUCTION: slide content from WRG-PublicApi race-results endpoint */
+
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero__track {
+  position: relative;
+  height: 100%;
+}
+
+/* All slides stack via position:absolute; only .hero__slide--active is opaque */
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.hero__slide--active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* PLACEHOLDER driver photo — gradient block simulating race-action photo.
+   Production: replace background with background-image: url(driver-photo).
+   filter recipe echoes .layer-bg::before for tonal continuity with Layer 2. */
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--dc-clay) 0%, var(--dc-black) 100%);
+  filter: sepia(0.75) saturate(0.55) brightness(0.60);
+}
+
+.hero__slide:nth-child(2) .hero__photo {
+  background: linear-gradient(
+    200deg,
+    color-mix(in srgb, var(--dc-clay) 60%, var(--dc-track-gray)) 0%,
+    var(--dc-black) 100%
+  );
+}
+
+.hero__slide:nth-child(3) .hero__photo {
+  background: linear-gradient(130deg, var(--dc-track-gray) 0%, var(--dc-black) 100%);
+}
+
+.hero__slide:nth-child(4) .hero__photo {
+  background: linear-gradient(
+    175deg,
+    color-mix(in srgb, var(--dc-clay) 80%, var(--dc-black)) 0%,
+    var(--dc-black) 100%
+  );
+}
+
+/* Brand directional gradient: lower-left origin → upper-right, ~40% opacity.
+   Legibility layer for hero__content at bottom-left. Swaps with --brand-primary per skin. */
+.hero__grad {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top right,
+    color-mix(in srgb, var(--brand-primary) 38%, transparent) 0%,
+    transparent 55%
+  );
+}
+
+.hero__content {
+  position: absolute;
+  bottom: 88px;
+  left: 48px;
+  right: 48px;
+  max-width: 600px;
+  z-index: 2;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: color-mix(in srgb, var(--dc-bone) 75%, transparent);
+  margin-bottom: 14px;
+}
+
+.hero__name {
+  font-family: var(--font-display);
+  font-size: 72px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 0.95;
+  letter-spacing: -1px;
+  margin-bottom: 28px;
+}
+
+/* .hero__cta — .btn class handles all base styling */
+
+.hero__dots {
+  position: absolute;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 3;
+}
+
+.hero__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--dc-bone) 40%, transparent);
+  padding: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.hero__dot--active {
+  width: 10px;
+  background: var(--brand-primary);
+}
+
+
+/* --- Clay-groove divider (§5 Signature Element) --- */
+/* Raked clay surface: repeating diagonal stripe at 3°, --brand-primary at 70% opacity.
+   Uses --brand-primary (not secondary) because woo-latemodel secondary is #000000
+   and disappears on --dc-black. All three brand primaries are bright on dark. */
+.clay-divider {
+  height: 28px;
+  position: relative;
+  z-index: 10;
+  background: repeating-linear-gradient(
+    3deg,
+    color-mix(in srgb, var(--brand-primary) 70%, transparent) 0px,
+    color-mix(in srgb, var(--brand-primary) 70%, transparent) 4px,
+    var(--dc-black) 4px,
+    var(--dc-black) 8px
+  );
+}
+
+/* --- Footer --- */
+.site-footer__placeholder {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+}
+
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+
+/* Oswald metadata label: small caps treatment used for section headings, unit
+   labels, eyebrow context markers. Elements override font-size and letter-spacing
+   locally; they may also override color when the value differs from track-gray. */
+.u-label {
+  font-family: var(--font-label);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--dc-track-gray);
+}
+
+/* Single-line overflow truncation. Applied where column width is constrained. */
+.u-truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Monospace tabular numbers — for any column of figures that must align
+   vertically (standings points, countdown segments, race dates). */
+.u-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+
+/* ============================================================
+   MEDIA QUERIES
+   ============================================================ */
+
+/* Reduced-motion global — html scroll-behavior */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Hero: crossfade + dot transitions + Landmark text reveal.
+   Decorative — suppressed under reduced-motion. Auto-advance is NOT suppressed
+   (it is content navigation, not decoration). */
+@media (prefers-reduced-motion: no-preference) {
+  .hero__slide {
+    transition: opacity 600ms ease-in-out;
+  }
+
+  .hero__dot {
+    transition: width 200ms ease, background-color 200ms ease;
+  }
+
+  @keyframes hero-settle {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* Landmark page-load reveal: eyebrow → headline → CTA (staggered).
+     data-initial on first slide's .hero__content — fires once on load, never re-triggers. */
+  .hero__content[data-initial] .hero__eyebrow {
+    animation: hero-settle 400ms ease-out both;
+  }
+
+  .hero__content[data-initial] .hero__name {
+    animation: hero-settle 400ms ease-out both;
+    animation-delay: 80ms;
+  }
+
+  .hero__content[data-initial] .hero__cta {
+    animation: hero-settle 400ms ease-out both;
+    animation-delay: 180ms;
+  }
+}
+
+/* Mobile breakpoint: rail + pill merge into 56px top bar + drawer */
+@media (max-width: 767px) {
+
+  /* Rail hidden on mobile — data moves to nav-drawer */
+  .rail {
+    display: none;
+  }
+
+  /* Pill becomes full-width flat top bar */
+  .pill-header {
+    left: 0;
+    top: 0;
+    padding: 0;
+    background: var(--dc-black);
+    border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+  }
+
+  .pill-header__inner {
+    border-radius: 0;
+    border: none;
+    background: var(--dc-black);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    max-width: none;
+    width: 100%;
+    height: var(--mobile-bar-h);
+    padding: 0 16px;
+    justify-content: space-between;
+    /* No transition on mobile — state is static, not toggled */
+    transition: none;
+    overflow: visible;
+  }
+
+  /* Force collapsed visual state on mobile */
+  .pill-header__logomark {
+    max-width: 80px;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  .pill-nav {
+    display: none;
+  }
+
+  .pill-header__hamburger {
+    max-width: 44px;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  /* WATCH LIVE visible on mobile when live */
+  .pill-header--has-live .pill-watch-live {
+    max-width: 180px;
+    opacity: 1;
+    pointer-events: auto;
+    transition: none;
+  }
+
+  /* Content channel: full width, clear the top bar */
+  .content-channel {
+    margin-left: 0;
+    padding-top: var(--mobile-bar-h);
+  }
+
+  .site-footer {
+    margin-left: 0;
+    padding: 40px 24px 48px;
+  }
+
+  /* Hero: reduced height + typography adjustments for mobile */
+  .hero {
+    height: calc(100vh - var(--mobile-bar-h));
+  }
+
+  .hero__name {
+    font-size: 48px;
+  }
+
+  .hero__content {
+    left: 24px;
+    right: 24px;
+    bottom: 60px;
+  }
+}
