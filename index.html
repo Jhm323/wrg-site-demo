@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" data-brand="woo-sprint">
+<!-- <html lang="en" data-brand="woo-sprint"> -->
 <!-- <html lang="en" data-brand="super-dirtcar"> -->
-  <!-- <html lang="en" data-brand="woo-latemodel"> -->
+  <html lang="en" data-brand="woo-latemodel">
 
 <head>
   <meta charset="UTF-8">
@@ -261,16 +261,170 @@
       <p class="placeholder-section__label u-label">FLOATING BLOCKS</p>
     </section>
 
-    <section class="placeholder-section" id="standings" aria-label="Standings (placeholder)">
-      <p class="placeholder-section__label u-label">STANDINGS</p>
+    <!-- LAYER 3.3: Standings — Formula 1 podium pattern -->
+    <!-- PRODUCTION: driver data from WRG-PublicApi driver/standings tables -->
+    <section class="standings" id="standings" aria-label="Season standings">
+      <div class="clay-divider" aria-hidden="true"></div>
+
+      <div class="standings__inner">
+        <h2 class="standings__heading">SEASON LEADERS</h2>
+
+        <!-- Podium: DOM order P1, P2, P3 (semantic); CSS order rearranges to P2, P1, P3 on desktop -->
+        <div class="standings__podium" id="standings-podium">
+
+          <!-- P1 — champion; desktop center (order:2), mobile first (order:1) -->
+          <article class="standings__card standings__card--p1" aria-label="1st place: Donny Schatz">
+            <!-- PLACEHOLDER driver photo — production: driver portrait from WRG-PublicApi -->
+            <div class="standings__photo" aria-hidden="true"></div>
+            <div class="standings__wash" aria-hidden="true"></div>
+            <div class="standings__info">
+              <span class="standings__rank" aria-hidden="true">1</span>
+              <h3 class="standings__name">DONNY SCHATZ</h3>
+              <span class="standings__pts u-mono-num">1,240 PTS</span>
+            </div>
+          </article>
+
+          <!-- P2 — desktop left flank (order:1) -->
+          <article class="standings__card standings__card--p2" aria-label="2nd place: Kerry Madsen">
+            <!-- PLACEHOLDER driver photo — production: driver portrait from WRG-PublicApi -->
+            <div class="standings__photo" aria-hidden="true"></div>
+            <div class="standings__wash" aria-hidden="true"></div>
+            <div class="standings__info">
+              <span class="standings__rank" aria-hidden="true">2</span>
+              <h3 class="standings__name">KERRY MADSEN</h3>
+              <span class="standings__pts u-mono-num">1,190 PTS</span>
+            </div>
+          </article>
+
+          <!-- P3 — desktop right flank (order:3) -->
+          <article class="standings__card standings__card--p3" aria-label="3rd place: Grant Logan">
+            <!-- PLACEHOLDER driver photo — production: driver portrait from WRG-PublicApi -->
+            <div class="standings__photo" aria-hidden="true"></div>
+            <div class="standings__wash" aria-hidden="true"></div>
+            <div class="standings__info">
+              <span class="standings__rank" aria-hidden="true">3</span>
+              <h3 class="standings__name">GRANT LOGAN</h3>
+              <span class="standings__pts u-mono-num">1,155 PTS</span>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- P4–P5 compact rows — PRODUCTION: from WRG-PublicApi driver/standings tables -->
+        <ol class="standings__list" aria-label="Standings positions 4 and 5">
+          <li class="standings__list-item">
+            <span class="standings__list-rank" aria-hidden="true">4</span>
+            <span class="standings__list-name">BRAD SWEET</span>
+            <span class="standings__list-pts u-mono-num"><span class="sr-only">Points: </span>987</span>
+          </li>
+          <li class="standings__list-item">
+            <span class="standings__list-rank" aria-hidden="true">5</span>
+            <span class="standings__list-name">SHELDON HAUDENSCHILD</span>
+            <span class="standings__list-pts u-mono-num"><span class="sr-only">Points: </span>943</span>
+          </li>
+        </ol>
+      </div>
+
+      <div class="clay-divider" aria-hidden="true"></div>
     </section>
 
     <section class="placeholder-section" aria-label="Season stats (placeholder)">
       <p class="placeholder-section__label u-label">SEASON STATS</p>
     </section>
 
-    <section class="placeholder-section" id="media" aria-label="News (placeholder)">
-      <p class="placeholder-section__label u-label">NEWS</p>
+    <!-- LAYER 3.5: News — Juventus horizontal card scroll pattern -->
+    <!-- PRODUCTION: card data from WRG-PublicApi news endpoint -->
+    <section class="news" id="media" aria-label="Latest news">
+      <div class="clay-divider" aria-hidden="true"></div>
+
+      <div class="news__inner">
+        <div class="news__header">
+          <h2 class="news__heading">LATEST NEWS</h2>
+          <div class="news__arrows">
+            <button class="news__arrow news__arrow--prev"
+                    aria-label="Previous news"
+                    disabled>&#8592;</button>
+            <button class="news__arrow news__arrow--next"
+                    aria-label="Next news">&#8594;</button>
+          </div>
+        </div>
+
+        <div class="news__track" id="news-track" tabindex="0">
+
+          <article class="news__card">
+            <a href="#" class="news__card-link">
+              <div class="news__card-image" aria-hidden="true"></div>
+              <div class="news__card-body">
+                <p class="news__card-eyebrow u-label">RACE RESULTS · JUL 9</p>
+                <h3 class="news__card-headline">SCHATZ CLAIMS KNOXVILLE IN WIRE-TO-WIRE RUN</h3>
+              </div>
+            </a>
+          </article>
+
+          <article class="news__card">
+            <a href="#" class="news__card-link">
+              <div class="news__card-image" aria-hidden="true"></div>
+              <div class="news__card-body">
+                <p class="news__card-eyebrow u-label">RACE RESULTS · JUN 28</p>
+                <h3 class="news__card-headline">SWEET HOLDS OFF MADSEN IN ELDORA THRILLER</h3>
+              </div>
+            </a>
+          </article>
+
+          <article class="news__card">
+            <a href="#" class="news__card-link">
+              <div class="news__card-image" aria-hidden="true"></div>
+              <div class="news__card-body">
+                <p class="news__card-eyebrow u-label">EVENT PREVIEW · JUN 20</p>
+                <h3 class="news__card-headline">DIRT SUMMER NATIONALS RETURNS TO ELDORA FOR 40TH YEAR</h3>
+              </div>
+            </a>
+          </article>
+
+          <article class="news__card">
+            <a href="#" class="news__card-link">
+              <div class="news__card-image" aria-hidden="true"></div>
+              <div class="news__card-body">
+                <p class="news__card-eyebrow u-label">DRIVER NEWS · MAR 3</p>
+                <h3 class="news__card-headline">HAUDENSCHILD EXTENDS WITH STENHOUSE JR.&ndash;MARSHALL</h3>
+              </div>
+            </a>
+          </article>
+
+          <article class="news__card">
+            <a href="#" class="news__card-link">
+              <div class="news__card-image" aria-hidden="true"></div>
+              <div class="news__card-body">
+                <p class="news__card-eyebrow u-label">RACE RESULTS · JUN 14</p>
+                <h3 class="news__card-headline">MADSEN DOMINATES WILLIAMS GROVE IN FLAG-TO-FLAG WIN</h3>
+              </div>
+            </a>
+          </article>
+
+          <article class="news__card">
+            <a href="#" class="news__card-link">
+              <div class="news__card-image" aria-hidden="true"></div>
+              <div class="news__card-body">
+                <p class="news__card-eyebrow u-label">STANDINGS · JUL 1</p>
+                <h3 class="news__card-headline">POINTS BATTLE TIGHTENS WITH SIX ROUNDS REMAINING</h3>
+              </div>
+            </a>
+          </article>
+
+          <article class="news__card">
+            <a href="#" class="news__card-link">
+              <div class="news__card-image" aria-hidden="true"></div>
+              <div class="news__card-body">
+                <p class="news__card-eyebrow u-label">SERIES NEWS · JAN 15</p>
+                <h3 class="news__card-headline">2026 SPRINT SEASON EXPANDS TO 90 EVENTS ACROSS 22 STATES</h3>
+              </div>
+            </a>
+          </article>
+
+        </div>
+      </div>
+
+      <div class="clay-divider" aria-hidden="true"></div>
     </section>
 
   </main>

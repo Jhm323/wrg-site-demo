@@ -868,6 +868,330 @@ img {
   );
 }
 
+/* --- Standings section (Layer 3.3) — Formula 1 podium pattern --- */
+/* PRODUCTION: driver data from WRG-PublicApi driver/standings tables */
+
+.standings {
+  position: relative;
+  z-index: 10;
+  background: var(--dc-black);
+}
+
+.standings__inner {
+  padding: 56px 48px 0;
+}
+
+.standings__heading {
+  font-family: var(--font-display);
+  font-size: 48px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 1;
+  letter-spacing: -0.25px;
+  margin-bottom: 40px;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.standings__heading--visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Podium: flex row aligned at bottom — height difference creates podium-step look.
+   DOM order is P1, P2, P3 (semantic); CSS order rearranges to P2, P1, P3 on desktop. */
+.standings__podium {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.standings__card--p1 { order: 2; flex: 1.3; height: 500px; }
+.standings__card--p2 { order: 1; flex: 1;   height: 360px; }
+.standings__card--p3 { order: 3; flex: 1;   height: 310px; }
+
+.standings__card {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+}
+
+/* Full-bleed photo placeholder — production: real driver portrait from WRG-PublicApi */
+.standings__photo {
+  position: absolute;
+  inset: 0;
+  filter: sepia(0.35) saturate(0.7) brightness(0.62);
+}
+
+.standings__card--p1 .standings__photo {
+  background: linear-gradient(155deg, var(--dc-clay) 0%, var(--dc-track-gray) 45%, var(--dc-black) 100%);
+}
+
+.standings__card--p2 .standings__photo {
+  background: linear-gradient(160deg, var(--dc-track-gray) 0%, var(--dc-black) 100%);
+}
+
+.standings__card--p3 .standings__photo {
+  background: linear-gradient(145deg, var(--dc-clay) 20%, var(--dc-black) 100%);
+}
+
+/* Brand-primary wash: bottom-anchored gradient, ~two-thirds of card height */
+.standings__wash {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 67%;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--brand-primary) 50%, transparent) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.standings__info {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  z-index: 2;
+}
+
+.standings__rank {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 88px;
+  line-height: 0.9;
+  color: var(--brand-secondary);
+  /* Legibility when --brand-secondary is #000000 (woo-latemodel):
+     primary-tinted glow makes the black numeral pop against the brand wash;
+     hard dark drop shadow lifts it off any bright background. */
+  text-shadow:
+    0 0 36px color-mix(in srgb, var(--brand-primary) 70%, transparent),
+    0 2px 8px color-mix(in srgb, var(--dc-black) 98%, transparent);
+}
+
+.standings__name {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 26px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 1.1;
+  margin-bottom: 6px;
+  text-shadow: 0 2px 8px color-mix(in srgb, var(--dc-black) 90%, transparent);
+}
+
+.standings__pts {
+  display: block;
+  font-size: 13px;
+  color: color-mix(in srgb, var(--dc-bone) 80%, transparent);
+  text-shadow: 0 1px 4px color-mix(in srgb, var(--dc-black) 85%, transparent);
+}
+
+/* P4–P5 compact list rows */
+.standings__list {
+  list-style: none;
+  border-top: 1px solid color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+}
+
+.standings__list-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px;
+  border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+}
+
+.standings__list-rank {
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--brand-primary);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 24px;
+}
+
+.standings__list-name {
+  font-family: var(--font-label);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  flex: 1;
+}
+
+.standings__list-pts {
+  font-size: 13px;
+  color: var(--dc-track-gray);
+  flex-shrink: 0;
+}
+
+/* --- News section (Layer 3.5) — Juventus horizontal card scroll --- */
+/* PRODUCTION: card data from WRG-PublicApi news endpoint */
+
+.news {
+  position: relative;
+  z-index: 10;
+  background: rgba(13, 13, 13, 0.85);
+}
+
+.news__inner {
+  padding: 56px 48px 64px;
+}
+
+.news__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.news__heading {
+  font-family: var(--font-display);
+  font-size: 42px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 1;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.news__heading--visible {
+  opacity: 1;
+  transform: none;
+}
+
+.news__arrows {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.news__arrow {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--dc-track-gray) 40%, transparent);
+  color: var(--dc-bone);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.news__arrow:not(:disabled):hover {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.news__arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.news__track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.news__track::-webkit-scrollbar {
+  display: none;
+}
+
+.news__card {
+  flex: 0 0 320px;
+  width: 320px;
+  height: 360px;
+  position: relative;
+  overflow: hidden;
+  scroll-snap-align: start;
+  border: 1px solid color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+  border-radius: 3px;
+}
+
+/* Brand-primary sweep overlay — wipes from left on hover/focus-within */
+.news__card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--brand-primary) 14%, transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.news__card:hover,
+.news__card:focus-within {
+  border-color: var(--brand-primary);
+}
+
+.news__card:hover::before,
+.news__card:focus-within::before {
+  transform: scaleX(1);
+}
+
+.news__card-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.news__card-image {
+  flex-shrink: 0;
+  height: 180px;
+  background: linear-gradient(135deg, var(--dc-clay) 0%, var(--dc-black) 100%);
+}
+
+.news__card:nth-child(2n) .news__card-image {
+  background: linear-gradient(160deg, var(--dc-track-gray) 0%, var(--dc-black) 100%);
+}
+
+.news__card:nth-child(3n) .news__card-image {
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--dc-clay) 70%, var(--dc-track-gray)) 0%,
+    var(--dc-black) 100%
+  );
+}
+
+.news__card:nth-child(5n) .news__card-image {
+  background: linear-gradient(110deg, var(--dc-clay) 0%, var(--dc-track-gray) 60%, var(--dc-black) 100%);
+}
+
+.news__card-body {
+  flex: 1;
+  padding: 18px 20px 20px;
+  background: color-mix(in srgb, var(--dc-black) 88%, var(--dc-clay));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.news__card-eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.news__card-headline {
+  font-family: var(--font-display);
+  font-size: 20px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 1.1;
+}
+
 /* --- Footer --- */
 .site-footer__placeholder {
   font-size: 11px;
@@ -959,6 +1283,57 @@ img {
     animation: hero-settle 400ms ease-out both;
     animation-delay: 180ms;
   }
+
+  /* News heading: Landmark Settle — fires once when section enters viewport */
+  .news__heading--visible {
+    animation: hero-settle 400ms ease-out both;
+  }
+
+  /* News card sweep and border transitions */
+  .news__card {
+    transition: border-color 200ms ease;
+  }
+
+  .news__card::before {
+    transition: transform 280ms ease;
+  }
+
+  .news__arrow {
+    transition: border-color 180ms ease, color 180ms ease;
+  }
+
+  /* Standings heading: scroll-triggered Landmark Settle (larger displacement + spring curve) */
+  @keyframes section-settle {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .standings__heading--visible {
+    animation: section-settle 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Standings Settle-In Reveal: grayscale → color + fade + rise.
+     Cards are visible by default (reduced-motion gets them immediately).
+     Under no-preference, cards start hidden; JS adds --revealed to trigger.
+     P2→P1→P3 order via animation-delay — center arrives last, with weight. */
+  @keyframes settle-in {
+    from { filter: grayscale(1); opacity: 0; transform: translateY(16px); }
+    to   { filter: grayscale(0); opacity: 1; transform: none; }
+  }
+
+  .standings__card {
+    filter: grayscale(1);
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  .standings__card--revealed {
+    animation: settle-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .standings__card--p2.standings__card--revealed { animation-delay:   0ms; }
+  .standings__card--p1.standings__card--revealed { animation-delay:  90ms; }
+  .standings__card--p3.standings__card--revealed { animation-delay: 180ms; }
 }
 
 /* Mobile breakpoint: rail + pill merge into 56px top bar + drawer */
@@ -1046,4 +1421,32 @@ img {
     right: 24px;
     bottom: 60px;
   }
+
+  /* News: tighter padding + smaller heading on narrow viewports */
+  .news__inner {
+    padding: 40px 24px 48px;
+  }
+
+  .news__heading {
+    font-size: 32px;
+  }
+
+  /* Standings: single-column stack on mobile, P1 first */
+  .standings__inner {
+    padding: 40px 24px 0;
+  }
+
+  .standings__heading {
+    font-size: 36px;
+    margin-bottom: 28px;
+  }
+
+  .standings__podium {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .standings__card--p1 { order: 1; flex: none; height: 380px; }
+  .standings__card--p2 { order: 2; flex: none; height: 270px; }
+  .standings__card--p3 { order: 3; flex: none; height: 240px; }
 }

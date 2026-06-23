@@ -215,3 +215,78 @@ heroDots.forEach((dot, i) => {
 
 // Start auto-advance
 heroTimer = setInterval(advanceHero, SLIDE_MS);
+
+
+// ─── Standings section ────────────────────────────────────────
+// Heading Landmark Settle + podium Settle-In Reveal (P2→P1→P3).
+// PRODUCTION: driver data from WRG-PublicApi driver/standings tables.
+
+const standingsHeading = document.querySelector('.standings__heading');
+const standingsPodium  = document.getElementById('standings-podium');
+const standingsCards   = document.querySelectorAll('.standings__card');
+
+const standingsHeadingObserver = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      standingsHeading.classList.add('standings__heading--visible');
+      standingsHeadingObserver.disconnect();
+    }
+  },
+  { threshold: 0.25 }
+);
+standingsHeadingObserver.observe(standingsHeading);
+
+// All three cards receive --revealed simultaneously; CSS animation-delay
+// drives the P2 (0ms) → P1 (90ms) → P3 (180ms) stagger order.
+const podiumObserver = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      standingsCards.forEach(card => card.classList.add('standings__card--revealed'));
+      podiumObserver.disconnect();
+    }
+  },
+  { threshold: 0.25 }
+);
+podiumObserver.observe(standingsPodium);
+
+
+// ─── News section ─────────────────────────────────────────────
+// Arrow button controls and heading reveal.
+// PRODUCTION: card data from WRG-PublicApi news endpoint.
+
+const newsTrack   = document.getElementById('news-track');
+const newsPrev    = document.querySelector('.news__arrow--prev');
+const newsNext    = document.querySelector('.news__arrow--next');
+const newsHeading = document.querySelector('.news__heading');
+
+const CARD_SCROLL = 320 + 20; // card width + gap
+
+function updateNewsArrows() {
+  const { scrollLeft, scrollWidth, clientWidth } = newsTrack;
+  newsPrev.disabled = scrollLeft <= 0;
+  newsNext.disabled = scrollLeft >= scrollWidth - clientWidth - 1;
+}
+
+newsPrev.addEventListener('click', () => {
+  newsTrack.scrollBy({ left: -CARD_SCROLL, behavior: 'smooth' });
+});
+
+newsNext.addEventListener('click', () => {
+  newsTrack.scrollBy({ left: CARD_SCROLL, behavior: 'smooth' });
+});
+
+newsTrack.addEventListener('scroll', updateNewsArrows, { passive: true });
+updateNewsArrows();
+
+// Landmark Settle: reveal heading when section scrolls into view
+const newsHeadingObserver = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      newsHeading.classList.add('news__heading--visible');
+      newsHeadingObserver.disconnect();
+    }
+  },
+  { threshold: 0.25 }
+);
+
+newsHeadingObserver.observe(newsHeading);
