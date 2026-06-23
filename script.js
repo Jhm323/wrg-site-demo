@@ -217,6 +217,28 @@ heroDots.forEach((dot, i) => {
 heroTimer = setInterval(advanceHero, SLIDE_MS);
 
 
+// ─── Floating blocks section ──────────────────────────────────
+// Horizontal slide-in reveal. Each block observed independently so they
+// reveal as the user scrolls them into view.
+// PRODUCTION: block content from WRG-PublicApi featured-events endpoint.
+
+const floatingBlocks = document.querySelectorAll('.floating-block');
+
+const blockObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('floating-block--visible');
+        blockObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.2 }
+);
+
+floatingBlocks.forEach(block => blockObserver.observe(block));
+
+
 // ─── Standings section ────────────────────────────────────────
 // Heading Landmark Settle + podium Settle-In Reveal (P2→P1→P3).
 // PRODUCTION: driver data from WRG-PublicApi driver/standings tables.

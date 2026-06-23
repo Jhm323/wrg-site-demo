@@ -143,6 +143,20 @@ img {
 
 /* Salzburgring treatment: real race-action photo + sepia/brown grade.
    filter applied to ::before only — vignette (::after) is unaffected. */
+/*
+   PROD IMAGE — Layer 2 background (heaviest single asset):
+   • Serve as AVIF first, WebP fallback, from CloudFront CDN.
+   • Target ≤ 200 KB at 1920×1080 (AVIF at q55 or WebP at q75–80).
+     At 4K screens a 2560×1440 srcset variant is worth the extra weight.
+   • LQIP: serve a 32×18 base64-blurred JPEG as the initial background-image
+     (loads inline, no extra request), then swap in the full URL once loaded.
+     Swap can be done in JS via a hidden Image() object; set background-image
+     on load. Gives a warm color-fill during load rather than solid black.
+   • Coordinate URL update with floating-blocks copy — the photo must depict
+     the same event as the editorial blocks (see HTML comment on #schedule).
+   • The token-based gradient on .layer-bg is the load-failure fallback.
+     Do not remove it.
+*/
 .layer-bg::before {
   content: '';
   position: absolute;
@@ -868,6 +882,93 @@ img {
   );
 }
 
+/* --- Floating blocks (Layer 3.2) — Thibaut Courtois pattern --- */
+/*
+ * PRODUCTION: .layer-bg::before photograph must depict the SAME track/event
+ * as the editorial blocks in this section. The background is the subject of
+ * the content floating in front of it. Without that alignment the three-layer
+ * depth model collapses to a generic parallax gesture.
+ * Update photo URL and block copy together as a single coordinated release.
+ */
+
+/* NO background on this section — Layer 2 must show through the open space
+   around and between blocks. This is the keystone that proves the depth model. */
+.floating-blocks {
+  position: relative;
+  z-index: 10;
+  padding: 80px 0 100px;
+}
+
+.floating-blocks__inner {
+  padding: 0 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 72px;
+}
+
+.floating-block {
+  display: flex;
+}
+
+.floating-block--left  { justify-content: flex-start; }
+.floating-block--right { justify-content: flex-end; }
+
+.floating-block__card {
+  width: 58%;
+  background: color-mix(in srgb, var(--dc-clay) 92%, transparent);
+  border-radius: 6px;
+  padding: 40px 44px;
+  border-left: 3px solid color-mix(in srgb, var(--brand-primary) 65%, transparent);
+}
+
+.floating-block--right .floating-block__card {
+  border-left: none;
+  border-right: 3px solid color-mix(in srgb, var(--brand-primary) 65%, transparent);
+}
+
+.floating-block__eyebrow {
+  font-size: 11px;
+  letter-spacing: 2.5px;
+  margin-bottom: 14px;
+}
+
+/* .u-label sets color: --dc-track-gray; override here with higher specificity */
+.floating-block__eyebrow.u-label {
+  color: var(--brand-primary);
+}
+
+.floating-block__headline {
+  font-family: var(--font-display);
+  font-size: 34px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 1.05;
+  letter-spacing: -0.25px;
+  margin-bottom: 16px;
+}
+
+.floating-block__blurb {
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: color-mix(in srgb, var(--dc-bone) 78%, transparent);
+  margin-bottom: 24px;
+}
+
+.floating-block__link {
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--brand-primary);
+  display: inline-block;
+}
+
+.floating-block__link:hover {
+  color: var(--dc-bone);
+}
+
 /* --- Standings section (Layer 3.3) — Formula 1 podium pattern --- */
 /* PRODUCTION: driver data from WRG-PublicApi driver/standings tables */
 
@@ -916,7 +1017,11 @@ img {
   min-width: 0;
 }
 
-/* Full-bleed photo placeholder — production: real driver portrait from WRG-PublicApi */
+/* Full-bleed photo placeholder — production: real driver portrait from WRG-PublicApi.
+   PROD: when <img> replaces .standings__photo div, add:
+   .standings__photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+   Dimensions per card: P1 ≈ 400×500 px, P2 ≈ 308×360 px, P3 ≈ 308×310 px (see HTML comments).
+   loading="lazy" decoding="async" on all three — section is well below the fold. */
 .standings__photo {
   position: absolute;
   inset: 0;
@@ -1150,9 +1255,13 @@ img {
 
 .news__card-image {
   flex-shrink: 0;
-  height: 180px;
+  height: 180px;        /* placeholder height — matches 320×180 (16:9) display box */
+  aspect-ratio: 16 / 9; /* carries dimension contract when real <img width="320" height="180"> replaces the div */
   background: linear-gradient(135deg, var(--dc-clay) 0%, var(--dc-black) 100%);
 }
+
+/* PROD: when <img> replaces .news__card-image div, add:
+   .news__card-image img { display: block; width: 100%; height: 100%; object-fit: cover; } */
 
 .news__card:nth-child(2n) .news__card-image {
   background: linear-gradient(160deg, var(--dc-track-gray) 0%, var(--dc-black) 100%);
@@ -1302,6 +1411,31 @@ img {
     transition: border-color 180ms ease, color 180ms ease;
   }
 
+  /* Floating blocks: horizontal slide-in — direction matches alignment.
+     Left blocks slide from left; right blocks from right. Keeps them distinct
+     from the vertical Settle-In reveals used elsewhere in the page. */
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(32px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* Cards start hidden under motion; JS adds --visible per block as it enters viewport */
+  .floating-block--left  .floating-block__card { opacity: 0; transform: translateX(-32px); }
+  .floating-block--right .floating-block__card { opacity: 0; transform: translateX(32px); }
+
+  .floating-block--left.floating-block--visible  .floating-block__card {
+    animation: slide-in-left  500ms ease-out both;
+  }
+
+  .floating-block--right.floating-block--visible .floating-block__card {
+    animation: slide-in-right 500ms ease-out both;
+  }
+
   /* Standings heading: scroll-triggered Landmark Settle (larger displacement + spring curve) */
   @keyframes section-settle {
     from { opacity: 0; transform: translateY(40px); }
@@ -1429,6 +1563,34 @@ img {
 
   .news__heading {
     font-size: 32px;
+  }
+
+  /* Floating blocks: full-width single column; right blocks reset to left-aligned */
+  .floating-blocks {
+    padding: 56px 0 72px;
+  }
+
+  .floating-blocks__inner {
+    padding: 0 24px;
+    gap: 40px;
+  }
+
+  .floating-block--right {
+    justify-content: flex-start;
+  }
+
+  .floating-block__card {
+    width: 100%;
+    padding: 28px 28px 32px;
+  }
+
+  .floating-block--right .floating-block__card {
+    border-right: none;
+    border-left: 3px solid color-mix(in srgb, var(--brand-primary) 65%, transparent);
+  }
+
+  .floating-block__headline {
+    font-size: 26px;
   }
 
   /* Standings: single-column stack on mobile, P1 first */

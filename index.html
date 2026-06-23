@@ -11,6 +11,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@400;500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <!--
+    PERF: Layer 2 background image — browser cannot discover CSS background-image
+    URLs until the stylesheet is parsed and applied. This preload moves it onto
+    the critical path so it starts loading in parallel with the CSS download.
+    fetchpriority="high" because it is a full-viewport, first-paint asset.
+    PROD: update href to the WebP/AVIF asset on CloudFront CDN (see DESIGN_PLAN.md § 7).
+  -->
+  <link rel="preload" as="image" href="https://picsum.photos/seed/dirtcar/1920/1080" fetchpriority="high">
 </head>
 <body>
 
@@ -175,7 +183,20 @@
                  id="hero-slide-0"
                  aria-roledescription="slide"
                  aria-label="Slide 1 of 4: Donny Schatz">
-          <!-- PLACEHOLDER driver photo — production: real driver action photo at speed -->
+          <!--
+            PROD: replace .hero__photo div with a <picture> element (slide 1 only):
+            <picture>
+              <source type="image/avif" srcset="hero-schatz.avif">
+              <source type="image/webp" srcset="hero-schatz.webp">
+              <img class="hero__photo"
+                   src="hero-schatz.jpg"
+                   alt="Donny Schatz racing at Knoxville Nationals"
+                   width="1440" height="900"
+                   loading="eager" fetchpriority="high" decoding="sync">
+            </picture>
+            ABOVE THE FOLD — do NOT use loading="lazy".
+            Sized to 1440×900 (viewport box); serve from CloudFront CDN.
+          -->
           <div class="hero__photo" aria-hidden="true"></div>
           <div class="hero__grad" aria-hidden="true"></div>
           <div class="hero__content" data-initial>
@@ -190,7 +211,18 @@
                  aria-roledescription="slide"
                  aria-label="Slide 2 of 4: Brad Sweet"
                  aria-hidden="true">
-          <!-- PLACEHOLDER driver photo — production: real driver action photo at speed -->
+          <!--
+            PROD: <picture> with lazy loading — slide starts hidden, 5 s until auto-advance:
+            <picture>
+              <source type="image/avif" srcset="hero-sweet.avif">
+              <source type="image/webp" srcset="hero-sweet.webp">
+              <img class="hero__photo"
+                   src="hero-sweet.jpg"
+                   alt="Brad Sweet racing at Eldora Speedway"
+                   width="1440" height="900"
+                   loading="lazy" decoding="async">
+            </picture>
+          -->
           <div class="hero__photo" aria-hidden="true"></div>
           <div class="hero__grad" aria-hidden="true"></div>
           <div class="hero__content">
@@ -205,7 +237,18 @@
                  aria-roledescription="slide"
                  aria-label="Slide 3 of 4: Kerry Madsen"
                  aria-hidden="true">
-          <!-- PLACEHOLDER driver photo — production: real driver action photo at speed -->
+          <!--
+            PROD: <picture> with lazy loading — slide 3:
+            <picture>
+              <source type="image/avif" srcset="hero-madsen.avif">
+              <source type="image/webp" srcset="hero-madsen.webp">
+              <img class="hero__photo"
+                   src="hero-madsen.jpg"
+                   alt="Kerry Madsen racing at Williams Grove Speedway"
+                   width="1440" height="900"
+                   loading="lazy" decoding="async">
+            </picture>
+          -->
           <div class="hero__photo" aria-hidden="true"></div>
           <div class="hero__grad" aria-hidden="true"></div>
           <div class="hero__content">
@@ -220,7 +263,18 @@
                  aria-roledescription="slide"
                  aria-label="Slide 4 of 4: Sheldon Haudenschild"
                  aria-hidden="true">
-          <!-- PLACEHOLDER driver photo — production: real driver action photo at speed -->
+          <!--
+            PROD: <picture> with lazy loading — slide 4:
+            <picture>
+              <source type="image/avif" srcset="hero-haudenschild.avif">
+              <source type="image/webp" srcset="hero-haudenschild.webp">
+              <img class="hero__photo"
+                   src="hero-haudenschild.jpg"
+                   alt="Sheldon Haudenschild racing at Tulsa Speedway"
+                   width="1440" height="900"
+                   loading="lazy" decoding="async">
+            </picture>
+          -->
           <div class="hero__photo" aria-hidden="true"></div>
           <div class="hero__grad" aria-hidden="true"></div>
           <div class="hero__content">
@@ -257,8 +311,46 @@
     <!-- Clay-groove divider sample — renders between hero and floating blocks -->
     <div class="clay-divider" aria-hidden="true"></div>
 
-    <section class="placeholder-section" id="schedule" aria-label="Floating blocks (placeholder)">
-      <p class="placeholder-section__label u-label">FLOATING BLOCKS</p>
+    <!-- LAYER 3.2: Floating Feature Blocks — Thibaut Courtois pattern -->
+    <!--
+      PRODUCTION: .layer-bg::before photograph must depict the SAME track/event
+      as these editorial blocks. The background is the subject of the content
+      floating in front of it — without that alignment the three-layer depth model
+      collapses to a generic parallax gesture. Update the background-image URL in
+      .layer-bg::before and the block copy together as a single release when
+      featuring a new event. Block content from WRG-PublicApi featured-events endpoint.
+    -->
+    <section class="floating-blocks" id="schedule" aria-label="Race week features">
+      <div class="floating-blocks__inner">
+
+        <div class="floating-block floating-block--left">
+          <article class="floating-block__card">
+            <p class="floating-block__eyebrow u-label">This week at Knoxville</p>
+            <h2 class="floating-block__headline">NATIONALS WEEK RETURNS TO THE IOWA SPEED PLANT</h2>
+            <p class="floating-block__blurb">The Knoxville Nationals — dirt track racing's biggest stage — returns July 9–12. Donny Schatz leads an all-star field of 58 cars chasing the most coveted trophy in the sport. Gates open Wednesday for hot laps.</p>
+            <a href="#" class="floating-block__link">Read more &#8594;</a>
+          </article>
+        </div>
+
+        <div class="floating-block floating-block--right">
+          <article class="floating-block__card">
+            <p class="floating-block__eyebrow u-label">This week at Eldora</p>
+            <h2 class="floating-block__headline">WORLD 100 QUALIFIER SETS THE KNOXVILLE STAGE</h2>
+            <p class="floating-block__blurb">Eldora Speedway hosts the final tune-up before Nationals: a 40-lap qualifier that has historically predicted the Knoxville champion. Brad Sweet and Kerry Madsen have both won here in the last four seasons.</p>
+            <a href="#" class="floating-block__link">Read more &#8594;</a>
+          </article>
+        </div>
+
+        <div class="floating-block floating-block--left">
+          <article class="floating-block__card">
+            <p class="floating-block__eyebrow u-label">This week at Williams Grove</p>
+            <h2 class="floating-block__headline">GROVE 410 SPRINT DRAWS 38-CAR FIELD</h2>
+            <p class="floating-block__blurb">Williams Grove Speedway continues its streak of 38-plus car fields as the season builds toward the championship stretch. Local favorite Lance Dewease headlines the entry list alongside two WoO title contenders.</p>
+            <a href="#" class="floating-block__link">Read more &#8594;</a>
+          </article>
+        </div>
+
+      </div>
     </section>
 
     <!-- LAYER 3.3: Standings — Formula 1 podium pattern -->
@@ -274,7 +366,22 @@
 
           <!-- P1 — champion; desktop center (order:2), mobile first (order:1) -->
           <article class="standings__card standings__card--p1" aria-label="1st place: Donny Schatz">
-            <!-- PLACEHOLDER driver photo — production: driver portrait from WRG-PublicApi -->
+            <!--
+              PROD: replace .standings__photo div (P1 — ~400 px wide × 500 px tall):
+              <picture>
+                <source type="image/avif" srcset="driver-schatz.avif">
+                <source type="image/webp" srcset="driver-schatz.webp">
+                <img class="standings__photo"
+                     src="driver-schatz.jpg"
+                     alt=""
+                     width="400" height="500"
+                     loading="lazy" decoding="async">
+              </picture>
+              alt="" because the article's aria-label already names the driver;
+              the photo is supplementary. Card is position:relative so the img
+              must be position:absolute; inset:0; width:100%; height:100%;
+              object-fit:cover (add to .standings__photo img rule in CSS).
+            -->
             <div class="standings__photo" aria-hidden="true"></div>
             <div class="standings__wash" aria-hidden="true"></div>
             <div class="standings__info">
@@ -286,7 +393,18 @@
 
           <!-- P2 — desktop left flank (order:1) -->
           <article class="standings__card standings__card--p2" aria-label="2nd place: Kerry Madsen">
-            <!-- PLACEHOLDER driver photo — production: driver portrait from WRG-PublicApi -->
+            <!--
+              PROD: replace .standings__photo div (P2 — ~308 px wide × 360 px tall):
+              <picture>
+                <source type="image/avif" srcset="driver-madsen.avif">
+                <source type="image/webp" srcset="driver-madsen.webp">
+                <img class="standings__photo"
+                     src="driver-madsen.jpg"
+                     alt=""
+                     width="308" height="360"
+                     loading="lazy" decoding="async">
+              </picture>
+            -->
             <div class="standings__photo" aria-hidden="true"></div>
             <div class="standings__wash" aria-hidden="true"></div>
             <div class="standings__info">
@@ -298,7 +416,18 @@
 
           <!-- P3 — desktop right flank (order:3) -->
           <article class="standings__card standings__card--p3" aria-label="3rd place: Grant Logan">
-            <!-- PLACEHOLDER driver photo — production: driver portrait from WRG-PublicApi -->
+            <!--
+              PROD: replace .standings__photo div (P3 — ~308 px wide × 310 px tall):
+              <picture>
+                <source type="image/avif" srcset="driver-logan.avif">
+                <source type="image/webp" srcset="driver-logan.webp">
+                <img class="standings__photo"
+                     src="driver-logan.jpg"
+                     alt=""
+                     width="308" height="310"
+                     loading="lazy" decoding="async">
+              </picture>
+            -->
             <div class="standings__photo" aria-hidden="true"></div>
             <div class="standings__wash" aria-hidden="true"></div>
             <div class="standings__info">
@@ -351,6 +480,24 @@
 
         <div class="news__track" id="news-track" tabindex="0">
 
+          <!--
+            PROD IMAGE PATTERN (all news cards — repeat per card):
+            Replace .news__card-image div with a <picture> element:
+            <picture>
+              <source type="image/avif" srcset="news-slug.avif">
+              <source type="image/webp" srcset="news-slug.webp">
+              <img class="news__card-image"
+                   src="news-slug.jpg"
+                   alt="[Descriptive caption — distinct from headline; what is shown in the photo]"
+                   width="320" height="180"
+                   loading="lazy" decoding="async">
+            </picture>
+            All news cards are below the fold — loading="lazy" is correct for every card.
+            width/height lock the 16:9 aspect ratio so the browser reserves 180 px of height
+            before the image loads (prevents layout shift in the card track).
+            Add object-fit: cover to .news__card-image img in CSS when real images land.
+            Images from WRG-PublicApi news endpoint; serve WebP/AVIF at 320×180 from CDN.
+          -->
           <article class="news__card">
             <a href="#" class="news__card-link">
               <div class="news__card-image" aria-hidden="true"></div>

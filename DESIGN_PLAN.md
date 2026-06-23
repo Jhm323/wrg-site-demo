@@ -430,3 +430,72 @@ Layer 3 acknowledges the stack: hero slides use the same duotone treatment as La
 **What was flagged as generic:** The first draft proposed a diagonal brand-color geometric slash across the hero using `clip-path`. This is the defining visual cliché of sports and esports design from approximately 2016–2024. Every Nike campaign, every esports team reveal, every motorsport season launch uses this device.
 
 **What was revised:** The diagonal slash as a graphic element was discarded. The hero still uses a directional gradient overlay (lower-left origin, ~25°) — this is structural, it ensures the headline reads against any photography — but it is a gradient fade, not a hard geometric cut. The signature element became the clay-groove section dividers, which are: (a) native to dirt-track racing and only dirt-track racing, (b) invisible to anyone looking for "design flourishes" because they read as material texture, not as a design decision, and (c) technically interesting to implement in pure CSS without images. The sign of a correct signature element is that removing it would make the design feel like it could be any sport. Removing the clay grooves does exactly that.
+
+---
+
+## 7. Image Performance Conventions
+
+_Applies to all sections — built and yet-to-be-built (season stats, featured drivers)._
+
+### Format
+
+Serve all images as **AVIF with WebP fallback** via `<picture>` + `<source type>` elements. Never serve JPEG or PNG as the primary format from the CDN. In production these assets come from CloudFront; the CDN should handle format negotiation server-side where possible (CloudFront + Lambda@Edge or Image Optimization), but the markup must also carry the `<source type>` chain as a belt-and-suspenders fallback.
+
+### Loading priority
+
+| Location | `loading` | `fetchpriority` | `decoding` | Rationale |
+|---|---|---|---|---|
+| Layer 2 background (`<link rel="preload">` in `<head>`) | — | `high` | — | Full-viewport, first-paint; CSS background-images are discovered late |
+| Hero slide 1 (`<img>`) | `eager` | `high` | `sync` | Above the fold, LCP candidate |
+| Hero slides 2–4 (`<img>`) | `lazy` | — | `async` | Hidden initially; auto-advance gives 5 s before needed |
+| Standings podium P1–P3 (`<img>`) | `lazy` | — | `async` | Below fold |
+| News card images (`<img>`) | `lazy` | — | `async` | Below fold, horizontal scroll |
+| Featured driver photos (`<img>`) | `lazy` | — | `async` | Below fold |
+| Season stats imagery (`<img>`) | `lazy` | — | `async` | Below fold |
+
+**Never add `loading="lazy"` to images that are above the fold.** The browser's native lazy-load threshold is ~1200 px below the viewport — an above-fold image marked `lazy` will still load, but only after the browser's layout is complete, delaying LCP.
+
+### Explicit dimensions (CLS prevention)
+
+Every `<img>` must carry `width` and `height` HTML attributes matching the display box. The browser uses these to calculate intrinsic aspect ratio and reserve layout space before the image loads, eliminating Cumulative Layout Shift (CLS).
+
+For CSS-positioned images (`position: absolute; inset: 0`) — standings photos, hero photos — the container's explicit height already reserves space, so CLS is low-risk. `width`/`height` on the `<img>` are still required for correctness.
+
+For flow images — news card images (320×180), featured driver cards — `width` and `height` attrs are the primary CLS protection. The CSS also carries `aspect-ratio: 16 / 9` on `.news__card-image` as a secondary guarantee.
+
+### Target sizes
+
+| Image | Display box | CDN target (AVIF) |
+|---|---|---|
+| Layer 2 background | 1920×1080 (viewport) | ≤ 200 KB |
+| Hero slides | 1440×900 | ≤ 150 KB |
+| Standings P1 | ≈ 400×500 | ≤ 60 KB |
+| Standings P2/P3 | ≈ 308×360 / 308×310 | ≤ 45 KB |
+| News card images | 320×180 | ≤ 20 KB |
+| Featured driver | TBD per section spec | ≤ 60 KB |
+
+### `object-fit` rule
+
+When an `<img>` replaces a placeholder div that fills a container (standings cards, hero slides, driver cards), add to the CSS:
+
+```css
+.section__photo img {
+  position: absolute;   /* only for positioned containers */
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center; /* preserve face/helmet for portrait-orientation driver photos */
+}
+```
+
+For flow images (news cards): `display: block; width: 100%; height: 100%; object-fit: cover;`
+
+### Layer 2 LQIP (Low-Quality Image Placeholder)
+
+The Layer 2 background is the heaviest single asset. To avoid a flash of the solid gradient fallback, use a LQIP:
+
+1. Generate a 32×18 JPEG at q10–15, base64-encode it.
+2. Set it as the initial `background-image` on `.layer-bg::before` inline in the HTML (as a `<style>` block in `<head>` — this is the one permitted exception to the no-inline-styles rule, because it must precede CSS parse).
+3. After the full image loads (via JS `new Image()` → `onload`), swap `.layer-bg::before`'s background-image to the full CDN URL.
+4. The token-based gradient on `.layer-bg` remains as the hard fallback if both the LQIP and the full image fail.
