@@ -217,9 +217,10 @@ heroDots.forEach((dot, i) => {
 heroTimer = setInterval(advanceHero, SLIDE_MS);
 
 
-// ─── Floating blocks section ──────────────────────────────────
-// Horizontal slide-in reveal. Each block observed independently so they
-// reveal as the user scrolls them into view.
+// ─── Featured section (floating blocks) ──────────────────────
+// Racecar launch entrance: each block fires independently when it enters the viewport.
+// CSS handles the stagger (animation-delay via nth-child) and the 3-phase launch curve
+// (explosive start → 5 px overshoot → firm settle). JS only adds --visible per block.
 // PRODUCTION: block content from WRG-PublicApi featured-events endpoint.
 
 const floatingBlocks = document.querySelectorAll('.floating-block');

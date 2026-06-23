@@ -320,7 +320,18 @@
       .layer-bg::before and the block copy together as a single release when
       featuring a new event. Block content from WRG-PublicApi featured-events endpoint.
     -->
-    <section class="floating-blocks" id="schedule" aria-label="Race week features">
+    <section class="floating-blocks" id="schedule" aria-label="Featured stories">
+      <!--
+        FEATURED — intentionally curated, intentionally few (2–3 editorial blocks +
+        track context card). This section's purpose is the three-layer depth model:
+        Layer 2 must show through the open space around each block. If you find yourself
+        adding many blocks here, they belong in the Latest News horizontal scroller instead
+        (#media). These two sections are NOT duplicates — they are different by design:
+        Featured = curated depth showcase; Latest News = high-volume feed.
+      -->
+      <div class="floating-blocks__header">
+        <p class="floating-blocks__label u-label">Featured</p>
+      </div>
       <div class="floating-blocks__inner">
 
         <div class="floating-block floating-block--left">
@@ -347,6 +358,108 @@
             <h2 class="floating-block__headline">GROVE 410 SPRINT DRAWS 38-CAR FIELD</h2>
             <p class="floating-block__blurb">Williams Grove Speedway continues its streak of 38-plus car fields as the season builds toward the championship stretch. Local favorite Lance Dewease headlines the entry list alongside two WoO title contenders.</p>
             <a href="#" class="floating-block__link">Read more &#8594;</a>
+          </article>
+        </div>
+
+        <!-- TRACK CONTEXT CARD — block type 2 within .floating-blocks.
+             Distinct internal layout from editorial blocks; same visual language (clay bg,
+             border, radius, racecar-launch entrance, hover lunge).
+             Sequence position: 4th block, right-aligned (alternates after 3rd left block).
+             PRODUCTION: venue data from WRG-PublicApi featured-events endpoint;
+             winner history from /tracks/{track_ID}/results?series={entity_ID}. -->
+        <div class="floating-block floating-block--right">
+          <article class="floating-block__card floating-block__card--track-context"
+                   aria-label="Track context: Knoxville Raceway, past winners">
+
+            <p class="floating-block__eyebrow u-label">Past winners at this venue</p>
+
+            <div class="track-ctx__header">
+              <!-- PLACEHOLDER flag block. PRODUCTION: country/state flag <img> or inline SVG
+                   sourced from the venue record. Class only — no inline style attribute. -->
+              <span class="track-ctx__flag" role="img" aria-label="US venue flag placeholder"></span>
+              <h2 class="track-ctx__name">KNOXVILLE RACEWAY</h2>
+            </div>
+            <p class="track-ctx__location u-label">Knoxville, Iowa &middot; &frac12; Mile Dirt Oval</p>
+
+            <!-- Visual zone: layered z-stack. Globe is a background texture layer;
+                 aerial track view sits on top as the focal element.
+                 aria-hidden — decorative graphics; semantic content is the winners list below. -->
+            <div class="track-ctx__visual" aria-hidden="true">
+
+              <!-- BACK LAYER: world-map background with location pin.
+                   Globe reads as a design/texture layer — no zone label here. -->
+              <!-- GLOBE + LOCATION PIN — PLACEHOLDER.
+                   PRODUCTION: one reusable world-map asset (WebP/AVIF from CloudFront CDN)
+                   shared across all tracks. Pin is positioned from the track's real lat/long
+                   coordinates (available in the DB / racing_track table).
+                   Knoxville IA: 41.30°N 93.10°W → Mercator ≈ 23% from left, 31% from top.
+                   PROD markup:
+                     <picture>
+                       <source type="image/avif" srcset="world-map.avif">
+                       <source type="image/webp" srcset="world-map.webp">
+                       <img class="track-ctx__globe-img" src="world-map.jpg" alt=""
+                            width="200" height="130" loading="lazy" decoding="async">
+                     </picture>
+                   alt="" — zone is aria-hidden; no meaningful alternative needed.
+                   loading="lazy" — below the fold (image perf conventions § 7). -->
+              <div class="track-ctx__globe-wrap">
+                <div class="track-ctx__globe">
+                  <!-- Pin: absolute-positioned at Knoxville IA Mercator coords (41.3°N 93.1°W). -->
+                  <span class="track-ctx__pin"></span>
+                </div>
+              </div>
+
+              <!-- FRONT LAYER: aerial track view, centered over the globe background.
+                   Graceful degradation: if aerial is absent, globe + name + winners carry the card. -->
+              <!-- AERIAL TRACK VIEW — PLACEHOLDER.
+                   PRODUCTION: aerial/satellite photo from the yoda asset/marketing folder,
+                   keyed by track. Real photography of the actual venue — preferred over a
+                   vector outline for authenticity. Serve as WebP/AVIF, sized to the card,
+                   loading="lazy". Fallback: if a track lacks an aerial, hide this element
+                   gracefully (card still works via name + globe + winners):
+                   CSS → .track-ctx__aerial-wrap:not(:has(img[src])) { display: none; }
+                   or JS → if (!aerial.src) aerialWrap.hidden = true; -->
+              <figure class="track-ctx__aerial-wrap">
+                <!-- Placeholder: stock landscape at aerial aspect ratio (220×130).
+                     PRODUCTION: <picture> with AVIF + WebP sources from yoda CDN. -->
+                <img class="track-ctx__aerial"
+                     src="https://picsum.photos/seed/knoxville-aerial/220/130"
+                     alt=""
+                     width="220"
+                     height="130"
+                     loading="lazy"
+                     decoding="async">
+                <p class="track-ctx__zone-label u-label">AERIAL VIEW</p>
+              </figure>
+
+            </div>
+
+            <!-- PAST WINNERS LIST
+                 PRODUCTION: query WRG-PublicApi /tracks/{track_ID}/results?series={entity_ID}
+                 for prior winners at this venue. Display 3–5 most recent distinct winners. -->
+            <ol class="track-ctx__winners" aria-label="Past winners at Knoxville Raceway">
+              <li class="track-ctx__winner">
+                <span class="track-ctx__winner-name">Donny Schatz</span>
+                <span class="track-ctx__winner-year u-mono-num">2024</span>
+              </li>
+              <li class="track-ctx__winner">
+                <span class="track-ctx__winner-name">Brad Sweet</span>
+                <span class="track-ctx__winner-year u-mono-num">2023</span>
+              </li>
+              <li class="track-ctx__winner">
+                <span class="track-ctx__winner-name">Donny Schatz</span>
+                <span class="track-ctx__winner-year u-mono-num">2022</span>
+              </li>
+              <li class="track-ctx__winner">
+                <span class="track-ctx__winner-name">Logan Schuchart</span>
+                <span class="track-ctx__winner-year u-mono-num">2021</span>
+              </li>
+              <li class="track-ctx__winner">
+                <span class="track-ctx__winner-name">Donny Schatz</span>
+                <span class="track-ctx__winner-year u-mono-num">2019</span>
+              </li>
+            </ol>
+
           </article>
         </div>
 

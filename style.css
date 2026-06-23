@@ -906,6 +906,25 @@ img {
   gap: 72px;
 }
 
+/* FEATURED section label — distinguishes this curated section from the horizontal
+   Latest News scroller. Keep the label understated: it identifies, not headlines.
+   INTENT: few blocks (2–3 + track context). High-volume news lives in Latest News. */
+.floating-blocks__header {
+  padding: 0 48px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+}
+
+.floating-blocks__label {
+  margin: 0 0 12px;
+}
+
+/* .u-label sets color: --dc-track-gray; this muted bone reads as editorial identity,
+   not section navigation — intentionally quieter than the brand-primary eyebrows on cards */
+.floating-blocks__label.u-label {
+  color: color-mix(in srgb, var(--dc-bone) 42%, transparent);
+}
+
 .floating-block {
   display: flex;
 }
@@ -967,6 +986,176 @@ img {
 
 .floating-block__link:hover {
   color: var(--dc-bone);
+}
+
+/* --- Track Context card (floating-block__card--track-context) --- */
+/*
+ * Block type 2 within .floating-blocks. Inherits all .floating-block__card base styles
+ * (clay bg, border, radius, padding, racecar-launch entrance, hover lunge).
+ * Distinct internal layout — visual zone + winners list — not a replacement for
+ * editorial blocks; both coexist in the section.
+ * PRODUCTION: venue + winners data from WRG-PublicApi.
+ * Graceful degradation: if aerial image is absent, winners list + globe carry the card.
+ */
+
+.track-ctx__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+
+.track-ctx__name {
+  font-family: var(--font-display);
+  font-size: 30px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 1;
+  letter-spacing: -0.2px;
+}
+
+/* PLACEHOLDER flag block. PRODUCTION: country/state flag <img> or SVG per venue record. */
+.track-ctx__flag {
+  display: inline-block;
+  width: 22px;
+  height: 16px;
+  background: color-mix(in srgb, var(--brand-primary) 55%, var(--dc-clay));
+  border-radius: 2px;
+  border: 1px solid color-mix(in srgb, var(--brand-primary) 35%, transparent);
+  flex-shrink: 0;
+}
+
+.track-ctx__location {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--dc-track-gray);
+  margin-bottom: 22px;
+}
+
+/* Visual zone: layered z-stack. Globe fills the zone as a background texture (abs);
+   aerial wrap is in normal flow so it sets the zone height. overflow:hidden keeps
+   both layers clipped to the card bounds at all widths.
+   min-height ensures the globe texture is visible if the aerial is absent. */
+.track-ctx__visual {
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  overflow: hidden;
+  min-height: 80px;
+}
+
+/* Globe wrap: back layer — fills the zone completely via absolute positioning */
+.track-ctx__globe-wrap {
+  position: absolute;
+  inset: 0;
+}
+
+/* Placeholder dotted-world-map background — softened (opacity 0.55) so it reads as
+   a design texture behind the aerial, not a labeled focal element of its own.
+   Fills globe-wrap completely; no border/radius (parent .track-ctx__visual handles that).
+   PRODUCTION: replace .track-ctx__globe div with a <picture> element (see HTML comment).
+   Shared asset; loading="lazy" required per image performance conventions (§ 7). */
+.track-ctx__globe {
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(
+      circle,
+      color-mix(in srgb, var(--dc-track-gray) 48%, transparent) 1px,
+      transparent 1px
+    ),
+    color-mix(in srgb, var(--dc-black) 65%, var(--dc-clay));
+  background-size: 9px 9px, 100% 100%;
+  position: relative;
+  overflow: hidden;
+  opacity: 0.55;
+}
+
+/* Aerial wrap: front layer, in normal flow so it sets the zone height.
+   z-index:1 lifts it above the absolute globe layer. */
+.track-ctx__aerial-wrap {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+}
+
+/* Aerial photo — placeholder or production AVIF/WebP from yoda CDN.
+   max-width:100% scales the image down in narrow containers without layout shift
+   (intrinsic width="220" height="130" on <img> and aspect-ratio here prevent CLS).
+   object-fit:cover maintains fill if production source dimensions vary. */
+.track-ctx__aerial {
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  aspect-ratio: 220 / 130;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+}
+
+/* Label beneath the aerial view */
+.track-ctx__zone-label {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--dc-track-gray);
+  text-align: center;
+  margin: 0;
+}
+
+/* Location pin — absolute-positioned at Knoxville IA Mercator coords (41.3°N 93.1°W) */
+.track-ctx__pin {
+  position: absolute;
+  left: 23%;
+  top: 31%;
+  width: 10px;
+  height: 10px;
+  background: var(--brand-primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Outer ring on the pin */
+.track-ctx__pin::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 1.5px solid color-mix(in srgb, var(--brand-primary) 50%, transparent);
+  border-radius: 50%;
+}
+
+/* Past winners list */
+.track-ctx__winners {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+}
+
+.track-ctx__winner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+}
+
+.track-ctx__winner-name {
+  font-family: var(--font-label);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+}
+
+.track-ctx__winner-year {
+  font-size: 13px;
+  color: var(--dc-track-gray);
+  flex-shrink: 0;
 }
 
 /* --- Standings section (Layer 3.3) — Formula 1 podium pattern --- */
@@ -1411,30 +1600,71 @@ img {
     transition: border-color 180ms ease, color 180ms ease;
   }
 
-  /* Floating blocks: horizontal slide-in — direction matches alignment.
-     Left blocks slide from left; right blocks from right. Keeps them distinct
-     from the vertical Settle-In reveals used elsewhere in the page. */
-  @keyframes slide-in-left {
-    from { opacity: 0; transform: translateX(-32px); }
-    to   { opacity: 1; transform: none; }
+  /* ── RACECAR LAUNCH entrance — Featured floating blocks ──────────────────────
+     Character: a sprint car launching from the groove and braking hard into position.
+     DIRECTION: all blocks enter from the right (+100 px offset) and race right-to-left
+     into their settled positions — regardless of whether they rest on the left or right
+     side of the section. Unified direction of travel, like cars coming down the front stretch.
+     Three-phase anatomy:
+       0 %→80 %  cubic-bezier(0.16,1,0.3,1) — explosive start, violent deceleration.
+                 Block fires from +100 px, decelerates to a -5 px overshoot (left of rest).
+       80%→100%  ease-out — firm, unhurried brake back from overshoot to rest.
+                 This 130 ms settle reads as the car hooking up, not as a rubber bounce.
+     Scale 0.98→1.004→1: block feels like it's arriving toward the viewer (Z-depth).
+     Opacity 0→1 inside phase 1 so the block is fully visible as it overshoots.
+     Duration 650 ms — fast enough to feel mechanical, slow enough to register.
+     NO motion-blur — the curve and travel distance carry the speed, not post-processing.
+
+     STAGGER: blocks launch in sequence (~120 ms apart) via animation-delay on nth-child.
+     The delay uses fill-mode backwards (included in 'both') so each block holds at its
+     starting position during its wait; no visible jump when the delay expires.
+
+     HOVER LUNGE: uses CSS `scale` + `translate` properties (separate from `transform`)
+     so they are independent of the animation fill-mode which freezes `transform`.
+     Scale 1→1.02 "blips the throttle"; translate pushes the block inward 4 px. */
+
+  @keyframes launch {
+    0% {
+      opacity: 0;
+      transform: translateX(100px) scale(0.98);
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    80% {
+      opacity: 1;
+      transform: translateX(-5px) scale(1.004);
+      animation-timing-function: ease-out;
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
   }
 
-  @keyframes slide-in-right {
-    from { opacity: 0; transform: translateX(32px); }
-    to   { opacity: 1; transform: none; }
+  /* Pre-launch state: all blocks start offset right, regardless of layout side */
+  .floating-block .floating-block__card { opacity: 0; transform: translateX(100px) scale(0.98); }
+
+  /* Single animation for all blocks — entrance direction is right-to-left for all */
+  .floating-block.floating-block--visible .floating-block__card {
+    animation: launch 650ms linear both;
   }
 
-  /* Cards start hidden under motion; JS adds --visible per block as it enters viewport */
-  .floating-block--left  .floating-block__card { opacity: 0; transform: translateX(-32px); }
-  .floating-block--right .floating-block__card { opacity: 0; transform: translateX(32px); }
+  /* Stagger: delay per DOM position so blocks launch in sequence, not simultaneously */
+  .floating-block:nth-child(1).floating-block--visible .floating-block__card { animation-delay:   0ms; }
+  .floating-block:nth-child(2).floating-block--visible .floating-block__card { animation-delay: 120ms; }
+  .floating-block:nth-child(3).floating-block--visible .floating-block__card { animation-delay: 240ms; }
+  .floating-block:nth-child(4).floating-block--visible .floating-block__card { animation-delay: 360ms; }
 
-  .floating-block--left.floating-block--visible  .floating-block__card {
-    animation: slide-in-left  500ms ease-out both;
+  /* Hover lunge — snappy throttle-blip on hover/focus-within.
+     `scale` and `translate` are independent of the animation's `transform` fill state. */
+  .floating-block__card {
+    transition: scale 180ms ease-out, translate 180ms ease-out;
   }
 
-  .floating-block--right.floating-block--visible .floating-block__card {
-    animation: slide-in-right 500ms ease-out both;
-  }
+  .floating-block--left  .floating-block__card:hover,
+  .floating-block--left  .floating-block__card:focus-within { translate:  4px 0; scale: 1.02; }
+
+  .floating-block--right .floating-block__card:hover,
+  .floating-block--right .floating-block__card:focus-within { translate: -4px 0; scale: 1.02; }
 
   /* Standings heading: scroll-triggered Landmark Settle (larger displacement + spring curve) */
   @keyframes section-settle {
@@ -1566,6 +1796,11 @@ img {
   }
 
   /* Floating blocks: full-width single column; right blocks reset to left-aligned */
+  .floating-blocks__header {
+    padding: 0 24px;
+    margin-bottom: 24px;
+  }
+
   .floating-blocks {
     padding: 56px 0 72px;
   }
@@ -1592,6 +1827,9 @@ img {
   .floating-block__headline {
     font-size: 26px;
   }
+
+  /* Track context card: z-stack visual zone is responsive without mobile overrides.
+     max-width:100% on .track-ctx__aerial scales it down in narrow cards automatically. */
 
   /* Standings: single-column stack on mobile, P1 first */
   .standings__inner {
