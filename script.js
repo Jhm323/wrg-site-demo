@@ -380,3 +380,64 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   );
   statsClusterObs.observe(seasonStatsCluster);
 }
+
+
+// ─── DEV MODE panel — team review tool; not part of production ───────────
+// Controls skin (data-brand on <html>) and isLive state live, no reload.
+// State lives in memory only — page reload resets to current HTML defaults.
+
+(function devPanel() {
+  const panel       = document.getElementById('devpanel');
+  const toggleBtn   = document.getElementById('devpanel-toggle');
+  const panelBody   = document.getElementById('devpanel-body');
+  const skinBtns    = document.querySelectorAll('.devpanel__skin-btn');
+  const isLiveCheck = document.getElementById('devpanel-islive');
+
+  // ── Collapse / expand ────────────────────────────────────────
+  toggleBtn.addEventListener('click', () => {
+    const isOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
+    toggleBtn.setAttribute('aria-expanded', String(!isOpen));
+    toggleBtn.textContent = isOpen ? 'DEV MODE ▾' : 'DEV MODE ▴';
+    panelBody.hidden = isOpen;
+  });
+
+  // Escape key closes the panel when focus is anywhere inside it
+  panel.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !panelBody.hidden) {
+      panelBody.hidden = true;
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      toggleBtn.textContent = 'DEV MODE ▾';
+      toggleBtn.focus();
+    }
+  });
+
+  // ── Skin switcher ────────────────────────────────────────────
+  function setActiveSkin(brand) {
+    document.documentElement.setAttribute('data-brand', brand);
+    skinBtns.forEach(btn => {
+      btn.classList.toggle('devpanel__skin-btn--active', btn.dataset.brand === brand);
+    });
+  }
+
+  // Sync initial active state with whatever data-brand is in the HTML
+  setActiveSkin(document.documentElement.getAttribute('data-brand') || 'woo-sprint');
+
+  skinBtns.forEach(btn => {
+    btn.addEventListener('click', () => setActiveSkin(btn.dataset.brand));
+  });
+
+  // ── isLive toggle ────────────────────────────────────────────
+  // Reaches pillHeader and watchLiveBtn defined in module scope above.
+  function applyLiveState(live) {
+    pillHeader.classList.toggle('pill-header--has-live', live);
+    if (watchLiveBtn) {
+      if (live) {
+        watchLiveBtn.removeAttribute('tabindex');
+      } else {
+        watchLiveBtn.setAttribute('tabindex', '-1');
+      }
+    }
+  }
+
+  isLiveCheck.addEventListener('change', () => applyLiveState(isLiveCheck.checked));
+}());

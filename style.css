@@ -2020,3 +2020,143 @@ img {
   .standings__card--p2 { order: 2; flex: none; height: 270px; }
   .standings__card--p3 { order: 3; flex: none; height: 240px; }
 }
+
+
+/* ============================================================
+   DEV MODE PANEL
+   Team review tool — fixed overlay, not part of production.
+   Deliberately styled outside the site's brand token system
+   so it reads as a distinct tool layer at a glance.
+   ============================================================ */
+
+.devpanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 9999;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  user-select: none;
+  /* Excluded from prefers-reduced-motion guard — it's a tool, not page animation */
+}
+
+.devpanel__tab {
+  display: block;
+  width: 100%;
+  background: #b91c1c;
+  color: #fff;
+  border: 2px dashed #ff4444;
+  border-bottom: none;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.devpanel__tab:hover {
+  background: #991b1b;
+}
+
+.devpanel__tab:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: -3px;
+}
+
+.devpanel__body {
+  background: rgba(10, 10, 10, 0.97);
+  border: 2px dashed #ff4444;
+  border-top: none;
+  padding: 12px;
+  width: 220px;
+  color: #d0d0d0;
+}
+
+.devpanel__note {
+  font-size: 9px;
+  color: #666;
+  margin: 0 0 12px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.devpanel__fieldset {
+  border: 1px solid #2a2a2a;
+  border-radius: 3px;
+  padding: 8px 10px 10px;
+  margin: 0 0 10px;
+}
+
+.devpanel__fieldset:last-child {
+  margin-bottom: 0;
+}
+
+.devpanel__legend {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #666;
+  padding: 0 4px;
+  text-transform: uppercase;
+}
+
+.devpanel__skins {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.devpanel__skin-btn {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 3px;
+  color: #aaa;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 11px;
+  text-align: left;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+.devpanel__skin-btn:hover {
+  background: #242424;
+  border-color: #555;
+  color: #ddd;
+}
+
+.devpanel__skin-btn--active {
+  background: #7f1d1d;
+  border-color: #ff4444;
+  color: #fff;
+  font-weight: 700;
+}
+
+.devpanel__skin-btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.devpanel__live-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  color: #ccc;
+  font-size: 11px;
+}
+
+.devpanel__live-label input[type="checkbox"] {
+  accent-color: #ff4444;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  flex-shrink: 0;
+}

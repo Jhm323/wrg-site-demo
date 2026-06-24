@@ -904,6 +904,36 @@
     <p class="site-footer__placeholder u-label">FOOTER — PLACEHOLDER</p>
   </footer>
 
+  <!-- ── DEV MODE panel — team review tool; not part of production design ── -->
+  <div class="devpanel" id="devpanel">
+    <button class="devpanel__tab"
+            id="devpanel-toggle"
+            aria-expanded="false"
+            aria-controls="devpanel-body">
+      DEV MODE ▾
+    </button>
+    <div class="devpanel__body" id="devpanel-body" hidden>
+      <p class="devpanel__note">Review tool for this demo — not part of production.</p>
+
+      <fieldset class="devpanel__fieldset">
+        <legend class="devpanel__legend">SKIN</legend>
+        <div class="devpanel__skins">
+          <button class="devpanel__skin-btn" data-brand="woo-sprint">WoO Sprint</button>
+          <button class="devpanel__skin-btn" data-brand="woo-latemodel">WoO Late Model</button>
+          <button class="devpanel__skin-btn" data-brand="super-dirtcar">Super DIRTcar</button>
+        </div>
+      </fieldset>
+
+      <fieldset class="devpanel__fieldset">
+        <legend class="devpanel__legend">LIVE STATE</legend>
+        <label class="devpanel__live-label">
+          <input type="checkbox" id="devpanel-islive" checked>
+          Race is live
+        </label>
+      </fieldset>
+    </div>
+  </div>
+
   <script src="script.js" defer></script>
 </body>
 </html>
