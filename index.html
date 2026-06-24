@@ -18,7 +18,7 @@
     fetchpriority="high" because it is a full-viewport, first-paint asset.
     PROD: update href to the WebP/AVIF asset on CloudFront CDN (see DESIGN_PLAN.md § 7).
   -->
-  <link rel="preload" as="image" href="https://picsum.photos/seed/dirtcar/1920/1080" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/photos/dji_fly_20250713_210714_0370_1752455054452_photo.jpg" fetchpriority="high">
 </head>
 <body>
 
@@ -197,7 +197,13 @@
             ABOVE THE FOLD — do NOT use loading="lazy".
             Sized to 1440×900 (viewport box); serve from CloudFront CDN.
           -->
-          <div class="hero__photo" aria-hidden="true"></div>
+          <!-- WRG racing photo — real but illustrative; production will use driver-specific
+               shots from WRG media library served as WebP/AVIF from CloudFront CDN. -->
+          <img class="hero__photo"
+               src="assets/photos/_DSC0522.jpg"
+               alt="Sprint cars lined up for the main event with fireworks in the night sky"
+               width="1920" height="1080"
+               loading="eager" fetchpriority="high" decoding="sync">
           <div class="hero__grad" aria-hidden="true"></div>
           <div class="hero__content" data-initial>
             <p class="hero__eyebrow">KNOXVILLE NATIONALS · KNOXVILLE, IA</p>
@@ -223,7 +229,12 @@
                    loading="lazy" decoding="async">
             </picture>
           -->
-          <div class="hero__photo" aria-hidden="true"></div>
+          <!-- WRG racing photo — real but illustrative; production will use event-specific shots. -->
+          <img class="hero__photo"
+               src="assets/photos/150A0096.jpg"
+               alt="Sprint cars racing three-wide through a dusty turn at night"
+               width="1920" height="1080"
+               loading="lazy" decoding="async">
           <div class="hero__grad" aria-hidden="true"></div>
           <div class="hero__content">
             <p class="hero__eyebrow">DIRT SUMMER NATIONALS · ELDORA, OH</p>
@@ -249,7 +260,12 @@
                    loading="lazy" decoding="async">
             </picture>
           -->
-          <div class="hero__photo" aria-hidden="true"></div>
+          <!-- WRG racing photo — real but illustrative; production will use event-specific shots. -->
+          <img class="hero__photo"
+               src="assets/photos/_DSC0522.jpg"
+               alt="Sprint cars lined up for the main event with fireworks in the night sky"
+               width="1920" height="1080"
+               loading="lazy" decoding="async">
           <div class="hero__grad" aria-hidden="true"></div>
           <div class="hero__content">
             <p class="hero__eyebrow">WILLIAMS GROVE 410 SPRINT · WILLIAMS GROVE, PA</p>
@@ -275,7 +291,12 @@
                    loading="lazy" decoding="async">
             </picture>
           -->
-          <div class="hero__photo" aria-hidden="true"></div>
+          <!-- WRG racing photo — real but illustrative; production will use event-specific shots. -->
+          <img class="hero__photo"
+               src="assets/photos/150A0096.jpg"
+               alt="Sprint cars racing three-wide through a dusty turn at night"
+               width="1920" height="1080"
+               loading="lazy" decoding="async">
           <div class="hero__grad" aria-hidden="true"></div>
           <div class="hero__content">
             <p class="hero__eyebrow">DIRT CLASSIC · TULSA, OK</p>
@@ -336,6 +357,13 @@
 
         <div class="floating-block floating-block--left">
           <article class="floating-block__card">
+            <!-- WRG racing photo — real but illustrative; production will swap to CMS-curated set. -->
+            <figure class="floating-block__photo">
+              <img src="assets/photos/6L4A5231.jpg"
+                   alt=""
+                   width="640" height="220"
+                   loading="lazy" decoding="async">
+            </figure>
             <p class="floating-block__eyebrow u-label">This week at Knoxville</p>
             <h2 class="floating-block__headline">NATIONALS WEEK RETURNS TO THE IOWA SPEED PLANT</h2>
             <p class="floating-block__blurb">The Knoxville Nationals — dirt track racing's biggest stage — returns July 9–12. Donny Schatz leads an all-star field of 58 cars chasing the most coveted trophy in the sport. Gates open Wednesday for hot laps.</p>
@@ -345,6 +373,13 @@
 
         <div class="floating-block floating-block--right">
           <article class="floating-block__card">
+            <!-- WRG racing photo — real but illustrative; production will swap to CMS-curated set. -->
+            <figure class="floating-block__photo">
+              <img src="assets/photos/DSC01640%20copy.jpg"
+                   alt=""
+                   width="640" height="220"
+                   loading="lazy" decoding="async">
+            </figure>
             <p class="floating-block__eyebrow u-label">This week at Eldora</p>
             <h2 class="floating-block__headline">WORLD 100 QUALIFIER SETS THE KNOXVILLE STAGE</h2>
             <p class="floating-block__blurb">Eldora Speedway hosts the final tune-up before Nationals: a 40-lap qualifier that has historically predicted the Knoxville champion. Brad Sweet and Kerry Madsen have both won here in the last four seasons.</p>
@@ -354,6 +389,13 @@
 
         <div class="floating-block floating-block--left">
           <article class="floating-block__card">
+            <!-- WRG racing photo — real but illustrative; production will swap to CMS-curated set. -->
+            <figure class="floating-block__photo">
+              <img src="assets/photos/150A0096.jpg"
+                   alt=""
+                   width="640" height="220"
+                   loading="lazy" decoding="async">
+            </figure>
             <p class="floating-block__eyebrow u-label">This week at Williams Grove</p>
             <h2 class="floating-block__headline">GROVE 410 SPRINT DRAWS 38-CAR FIELD</h2>
             <p class="floating-block__blurb">Williams Grove Speedway continues its streak of 38-plus car fields as the season builds toward the championship stretch. Local favorite Lance Dewease headlines the entry list alongside two WoO title contenders.</p>
@@ -422,8 +464,10 @@
               <figure class="track-ctx__aerial-wrap">
                 <!-- Placeholder: stock landscape at aerial aspect ratio (220×130).
                      PRODUCTION: <picture> with AVIF + WebP sources from yoda CDN. -->
+                <!-- WRG aerial track photo — real but illustrative;
+                     production will serve venue-specific aerials from WRG media library. -->
                 <img class="track-ctx__aerial"
-                     src="https://picsum.photos/seed/knoxville-aerial/220/130"
+                     src="assets/photos/DSC_8585.jpg"
                      alt=""
                      width="220"
                      height="130"
@@ -495,7 +539,13 @@
               must be position:absolute; inset:0; width:100%; height:100%;
               object-fit:cover (add to .standings__photo img rule in CSS).
             -->
-            <div class="standings__photo" aria-hidden="true"></div>
+            <!-- WRG racing photo — real but illustrative; production uses driver-specific
+                 portraits from WRG media library served as WebP/AVIF from CloudFront CDN. -->
+            <img class="standings__photo"
+                 src="assets/photos/DSC01640%20copy.jpg"
+                 alt=""
+                 width="400" height="500"
+                 loading="lazy" decoding="async">
             <div class="standings__wash" aria-hidden="true"></div>
             <div class="standings__info">
               <span class="standings__rank" aria-hidden="true">1</span>
@@ -518,7 +568,12 @@
                      loading="lazy" decoding="async">
               </picture>
             -->
-            <div class="standings__photo" aria-hidden="true"></div>
+            <!-- WRG racing photo — real but illustrative; production uses driver-specific portraits. -->
+            <img class="standings__photo"
+                 src="assets/photos/150A0096.jpg"
+                 alt=""
+                 width="308" height="360"
+                 loading="lazy" decoding="async">
             <div class="standings__wash" aria-hidden="true"></div>
             <div class="standings__info">
               <span class="standings__rank" aria-hidden="true">2</span>
@@ -541,7 +596,12 @@
                      loading="lazy" decoding="async">
               </picture>
             -->
-            <div class="standings__photo" aria-hidden="true"></div>
+            <!-- WRG racing photo — real but illustrative; production uses driver-specific portraits. -->
+            <img class="standings__photo"
+                 src="assets/photos/DSC01640%20copy.jpg"
+                 alt=""
+                 width="308" height="310"
+                 loading="lazy" decoding="async">
             <div class="standings__wash" aria-hidden="true"></div>
             <div class="standings__info">
               <span class="standings__rank" aria-hidden="true">3</span>
@@ -600,7 +660,7 @@
               provides the meaningful information; photo is decorative context.
             -->
             <img class="bento-cell__photo"
-                 src="https://picsum.photos/seed/dcwins/960/720"
+                 src="assets/photos/JJA_1870-2.jpg"
                  alt=""
                  width="960" height="720"
                  loading="lazy" decoding="async">
@@ -617,7 +677,7 @@
               clear air ahead, showing front-running position.
             -->
             <img class="bento-cell__photo"
-                 src="https://picsum.photos/seed/dclaps/480/720"
+                 src="assets/photos/DSC_0811.jpg"
                  alt=""
                  width="480" height="720"
                  loading="lazy" decoding="async">
@@ -633,7 +693,7 @@
               PLACEHOLDER — production: heat race start or checkered flag moment.
             -->
             <img class="bento-cell__photo"
-                 src="https://picsum.photos/seed/dcheat/480/480"
+                 src="assets/photos/DSC_0451.jpg"
                  alt=""
                  width="480" height="480"
                  loading="lazy" decoding="async">
@@ -650,7 +710,7 @@
               and speed (car at full throttle, long track shot).
             -->
             <img class="bento-cell__photo"
-                 src="https://picsum.photos/seed/dcmiles/480/520"
+                 src="assets/photos/6L4A5231.jpg"
                  alt=""
                  width="480" height="520"
                  loading="lazy" decoding="async">
@@ -667,7 +727,7 @@
               lineup, or full-field start).
             -->
             <img class="bento-cell__photo"
-                 src="https://picsum.photos/seed/dcevents/960/520"
+                 src="assets/photos/DSC01532%20copy.jpg"
                  alt=""
                  width="960" height="520"
                  loading="lazy" decoding="async">
@@ -683,7 +743,7 @@
               PLACEHOLDER — production: podium or top-3 celebration photo.
             -->
             <img class="bento-cell__photo"
-                 src="https://picsum.photos/seed/dcpods/480/420"
+                 src="assets/photos/DSC01640%20copy.jpg"
                  alt=""
                  width="480" height="420"
                  loading="lazy" decoding="async">
@@ -736,7 +796,11 @@
           -->
           <article class="news__card">
             <a href="#" class="news__card-link">
-              <div class="news__card-image" aria-hidden="true"></div>
+              <img class="news__card-image"
+                   src="assets/photos/DSC_0451.jpg"
+                   alt=""
+                   width="320" height="180"
+                   loading="lazy" decoding="async">
               <div class="news__card-body">
                 <p class="news__card-eyebrow u-label">RACE RESULTS · JUL 9</p>
                 <h3 class="news__card-headline">SCHATZ CLAIMS KNOXVILLE IN WIRE-TO-WIRE RUN</h3>
@@ -746,7 +810,11 @@
 
           <article class="news__card">
             <a href="#" class="news__card-link">
-              <div class="news__card-image" aria-hidden="true"></div>
+              <img class="news__card-image"
+                   src="assets/photos/DSC01532%20copy.jpg"
+                   alt=""
+                   width="320" height="180"
+                   loading="lazy" decoding="async">
               <div class="news__card-body">
                 <p class="news__card-eyebrow u-label">RACE RESULTS · JUN 28</p>
                 <h3 class="news__card-headline">SWEET HOLDS OFF MADSEN IN ELDORA THRILLER</h3>
@@ -756,7 +824,11 @@
 
           <article class="news__card">
             <a href="#" class="news__card-link">
-              <div class="news__card-image" aria-hidden="true"></div>
+              <img class="news__card-image"
+                   src="assets/photos/JJA_1870-2.jpg"
+                   alt=""
+                   width="320" height="180"
+                   loading="lazy" decoding="async">
               <div class="news__card-body">
                 <p class="news__card-eyebrow u-label">EVENT PREVIEW · JUN 20</p>
                 <h3 class="news__card-headline">DIRT SUMMER NATIONALS RETURNS TO ELDORA FOR 40TH YEAR</h3>
@@ -766,7 +838,11 @@
 
           <article class="news__card">
             <a href="#" class="news__card-link">
-              <div class="news__card-image" aria-hidden="true"></div>
+              <img class="news__card-image"
+                   src="assets/photos/DSC_0811.jpg"
+                   alt=""
+                   width="320" height="180"
+                   loading="lazy" decoding="async">
               <div class="news__card-body">
                 <p class="news__card-eyebrow u-label">DRIVER NEWS · MAR 3</p>
                 <h3 class="news__card-headline">HAUDENSCHILD EXTENDS WITH STENHOUSE JR.&ndash;MARSHALL</h3>
@@ -776,7 +852,11 @@
 
           <article class="news__card">
             <a href="#" class="news__card-link">
-              <div class="news__card-image" aria-hidden="true"></div>
+              <img class="news__card-image"
+                   src="assets/photos/DSC_0451.jpg"
+                   alt=""
+                   width="320" height="180"
+                   loading="lazy" decoding="async">
               <div class="news__card-body">
                 <p class="news__card-eyebrow u-label">RACE RESULTS · JUN 14</p>
                 <h3 class="news__card-headline">MADSEN DOMINATES WILLIAMS GROVE IN FLAG-TO-FLAG WIN</h3>
@@ -786,7 +866,11 @@
 
           <article class="news__card">
             <a href="#" class="news__card-link">
-              <div class="news__card-image" aria-hidden="true"></div>
+              <img class="news__card-image"
+                   src="assets/photos/DSC01532%20copy.jpg"
+                   alt=""
+                   width="320" height="180"
+                   loading="lazy" decoding="async">
               <div class="news__card-body">
                 <p class="news__card-eyebrow u-label">STANDINGS · JUL 1</p>
                 <h3 class="news__card-headline">POINTS BATTLE TIGHTENS WITH SIX ROUNDS REMAINING</h3>
@@ -796,7 +880,11 @@
 
           <article class="news__card">
             <a href="#" class="news__card-link">
-              <div class="news__card-image" aria-hidden="true"></div>
+              <img class="news__card-image"
+                   src="assets/photos/JJA_1870-2.jpg"
+                   alt=""
+                   width="320" height="180"
+                   loading="lazy" decoding="async">
               <div class="news__card-body">
                 <p class="news__card-eyebrow u-label">SERIES NEWS · JAN 15</p>
                 <h3 class="news__card-headline">2026 SPRINT SEASON EXPANDS TO 90 EVENTS ACROSS 22 STATES</h3>
