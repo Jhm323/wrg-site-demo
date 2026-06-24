@@ -1591,9 +1591,111 @@ img {
 }
 
 /* --- Footer --- */
-.site-footer__placeholder {
-  font-size: 11px;
+
+/* 4-col grid: [2fr brand] [1fr series] [1fr explore] [1.2fr connect] */
+.footer-cols {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+/* Wordmark: Anton in --brand-primary so it re-tints on skin change */
+.footer-wordmark {
+  font-family: var(--font-display);
+  font-size: 28px;
+  text-transform: uppercase;
+  letter-spacing: -0.25px;
+  line-height: 1;
+  color: var(--brand-primary);
+  margin-bottom: 16px;
+}
+
+.footer-brand-desc {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: color-mix(in srgb, var(--dc-bone) 70%, transparent);
+  max-width: 28ch;
+}
+
+.footer-col__heading {
+  font-size: 10px;
   letter-spacing: 2.5px;
+  color: var(--dc-track-gray);
+  margin-bottom: 20px;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.footer-link {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.2;
+  color: color-mix(in srgb, var(--dc-bone) 72%, transparent);
+  text-decoration: none;
+  transition: color 0.12s;
+}
+
+.footer-link:hover {
+  color: var(--brand-primary);
+}
+
+/* Social icon row */
+.footer-social {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 40px;
+  display: flex;
+  gap: 12px;
+}
+
+.footer-social__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--dc-black) 45%, var(--dc-clay));
+  color: color-mix(in srgb, var(--dc-bone) 65%, transparent);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+}
+
+.footer-social__link:hover {
+  background: var(--brand-primary);
+  color: var(--dc-black);
+}
+
+/* Bottom bar: copyright left, corporate credit right */
+.footer-bottom {
+  border-top: 1px solid color-mix(in srgb, var(--dc-track-gray) 22%, transparent);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-bottom__copy {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--dc-bone);
+}
+
+.footer-bottom__corp {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--dc-track-gray);
 }
 
 
@@ -1827,6 +1929,21 @@ img {
   .bento-cell--laps-led    .bento-badge__num { font-size: 26px; }
 }
 
+/* Footer 2-col: at 950px viewport the 320px rail + 96px padding leaves only
+   534px content channel — 4 equal cols collapse too narrow for link labels. */
+@media (max-width: 950px) {
+  .footer-cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .footer-col--brand {
+    grid-column: 1 / -1;
+  }
+  .footer-brand-desc {
+    max-width: none;
+  }
+}
+
 /* Mobile breakpoint: rail + pill merge into 56px top bar + drawer */
 @media (max-width: 767px) {
 
@@ -2019,6 +2136,26 @@ img {
   .standings__card--p1 { order: 1; flex: none; height: 380px; }
   .standings__card--p2 { order: 2; flex: none; height: 270px; }
   .standings__card--p3 { order: 3; flex: none; height: 240px; }
+
+  /* Footer: single column + tighter spacing on mobile */
+  .footer-cols {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .footer-col--brand {
+    grid-column: auto; /* reset 950px span */
+  }
+  .footer-brand-desc {
+    max-width: none;
+  }
+  .footer-social {
+    margin-bottom: 32px;
+  }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
 }
 
 
