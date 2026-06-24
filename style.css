@@ -1323,6 +1323,136 @@ img {
   flex-shrink: 0;
 }
 
+/* --- Season Stats section (Layer 3.4) — Bento mosaic of picture boxes --- */
+/* PRODUCTION: aggregate stats from WRG-PublicApi season stats endpoint */
+
+.season-stats {
+  position: relative;
+  z-index: 10;
+  /* Semi-transparent: Layer 2 breathes through the section background and through
+     the open grid tracks around the bento cells. Individual cells are fully opaque. */
+  background: color-mix(in srgb, var(--dc-black) 78%, transparent);
+}
+
+.season-stats__inner {
+  padding: 72px 48px 80px;
+}
+
+/* Heading: Landmark Settle — JS adds --visible when heading enters viewport */
+.season-stats__heading {
+  font-family: var(--font-display);
+  font-size: 48px;
+  text-transform: uppercase;
+  color: var(--dc-bone);
+  line-height: 1;
+  letter-spacing: -0.25px;
+  margin-bottom: 48px;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.season-stats__heading--visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Bento mosaic — 4-col × 2-row picture grid (desktop ≥ 1280px) ──────────
+   Season Wins spans 2 cols (hero cell); Heat Wins is shorter and bottom-anchored;
+   Podiums is shorter and top-anchored. translateY stagger on Laps Led and Total
+   Events breaks the rigid grid rhythm; values stay smaller than the 20px gap so
+   no visual cell-to-cell overlap occurs. */
+.season-stats__bento {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 360px 260px;
+  gap: 20px;
+}
+
+/* Cell grid assignments */
+.bento-cell--season-wins  { grid-column: 1 / 3; grid-row: 1; }
+.bento-cell--laps-led     { grid-column: 3;     grid-row: 1; transform: translateY(10px); }
+.bento-cell--heat-wins    { grid-column: 4;     grid-row: 1; align-self: end; height: 240px; }
+.bento-cell--miles        { grid-column: 1;     grid-row: 2; }
+.bento-cell--total-events { grid-column: 2 / 4; grid-row: 2; transform: translateY(-10px); }
+.bento-cell--podiums      { grid-column: 4;     grid-row: 2; align-self: start; height: 210px; }
+
+/* ── Base picture box ──────────────────────────────────────────────────────── */
+.bento-cell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--dc-track-gray) 20%, transparent);
+}
+
+/* Photo fills the entire cell via object-fit */
+.bento-cell__photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Warm sepia grade matches the Layer 2 photo treatment for tonal consistency */
+  filter: sepia(0.4) saturate(0.65) brightness(0.72);
+}
+
+/* ── Stat badges (square corner stickers) ──────────────────────────────────
+   Each badge is an opaque square box nested in one corner of its cell photo.
+   NOT a horizontal caption bar — the badge is a discrete sticker shape ON TOP
+   of the photo. Badges are STRAIGHT (no rotation); corners vary per cell for
+   visual interest. 12px inset so badges read as "placed on" the photo, not
+   pixel-clipped to the literal cell corner. */
+.bento-badge {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: color-mix(in srgb, var(--dc-clay) 92%, var(--dc-black));
+  border: 1px solid color-mix(in srgb, var(--dc-track-gray) 28%, transparent);
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* Badge size tiers — box dimensions vary with stat importance */
+.bento-badge--xl { width: 88px; height: 88px; padding: 10px; }
+.bento-badge--md { width: 72px; height: 72px; padding: 8px; }
+.bento-badge--sm { width: 56px; height: 56px; padding: 7px; }
+
+/* Corner placement */
+.bento-badge--top-left     { top: 12px;    left: 12px; }
+.bento-badge--top-right    { top: 12px;    right: 12px; }
+.bento-badge--bottom-left  { bottom: 12px; left: 12px; }
+.bento-badge--bottom-right { bottom: 12px; right: 12px; }
+
+/* Badge number — tabular-nums (from u-mono-num) keeps widths stable during count-up */
+.bento-badge__num {
+  display: block;
+  color: var(--dc-bone);
+  line-height: 1;
+}
+
+/* Per-cell font sizes — sized to fit digit count within badge inner width.
+   JetBrains Mono char width ≈ 0.6× font-size; inner width = badge − 2×padding.
+   "18" (2ch) at 40px → ~48px in 68px inner (88−20) ✓
+   "847" (3ch) at 34px → ~61px in 68px inner ✓
+   "2,481" (5ch) at 18px → ~54px in 56px inner (72−16) ✓ */
+.bento-cell--season-wins  .bento-badge__num { font-size: 40px; }
+.bento-cell--laps-led     .bento-badge__num { font-size: 34px; }
+.bento-cell--total-events .bento-badge__num { font-size: 28px; }
+.bento-cell--miles        .bento-badge__num { font-size: 18px; }
+.bento-cell--heat-wins    .bento-badge__num { font-size: 22px; }
+.bento-cell--podiums      .bento-badge__num { font-size: 22px; }
+
+/* Badge label — wrapping allowed (necessary for "HEAT WINS" in the 56px SM badge) */
+.bento-badge__label {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--dc-track-gray);
+  text-align: center;
+}
+
 /* --- News section (Layer 3.5) — Juventus horizontal card scroll --- */
 /* PRODUCTION: card data from WRG-PublicApi news endpoint */
 
@@ -1666,13 +1796,14 @@ img {
   .floating-block--right .floating-block__card:hover,
   .floating-block--right .floating-block__card:focus-within { translate: -4px 0; scale: 1.02; }
 
-  /* Standings heading: scroll-triggered Landmark Settle (larger displacement + spring curve) */
+  /* Standings + Season Stats headings: scroll-triggered Landmark Settle */
   @keyframes section-settle {
     from { opacity: 0; transform: translateY(40px); }
     to   { opacity: 1; transform: none; }
   }
 
-  .standings__heading--visible {
+  .standings__heading--visible,
+  .season-stats__heading--visible {
     animation: section-settle 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
@@ -1698,6 +1829,32 @@ img {
   .standings__card--p2.standings__card--revealed { animation-delay:   0ms; }
   .standings__card--p1.standings__card--revealed { animation-delay:  90ms; }
   .standings__card--p3.standings__card--revealed { animation-delay: 180ms; }
+}
+
+/* Intermediate breakpoint: collapse 4-col bento to 2-col when the content channel
+   is too narrow for the full layout. At ≤ 1279px viewport (with 320px rail + 96px
+   padding = 416px overhead), the available bento width drops to ≤ 863px, making
+   4-col cells too narrow. Simplify to a clean 2-col layout; Season Wins spans
+   full width to preserve its hero role. Stagger transforms are removed. */
+@media (max-width: 1279px) {
+  .season-stats__bento {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 260px 200px 200px 180px;
+    gap: 16px;
+  }
+
+  /* Explicit 2-col placements */
+  .bento-cell--season-wins  { grid-column: 1 / 3; grid-row: 1; }
+  .bento-cell--laps-led     { grid-column: 1;     grid-row: 2; transform: none; }
+  .bento-cell--heat-wins    { grid-column: 2;     grid-row: 2; height: auto; align-self: stretch; }
+  .bento-cell--miles        { grid-column: 1;     grid-row: 3; }
+  .bento-cell--total-events { grid-column: 2;     grid-row: 3; transform: none; }
+  .bento-cell--podiums      { grid-column: 1 / 3; grid-row: 4; height: auto; align-self: stretch; }
+
+  /* Scale XL badges down; md and sm unchanged */
+  .bento-badge--xl { width: 72px; height: 72px; padding: 8px; }
+  .bento-cell--season-wins .bento-badge__num { font-size: 32px; }
+  .bento-cell--laps-led    .bento-badge__num { font-size: 26px; }
 }
 
 /* Mobile breakpoint: rail + pill merge into 56px top bar + drawer */
@@ -1830,6 +1987,43 @@ img {
 
   /* Track context card: z-stack visual zone is responsive without mobile overrides.
      max-width:100% on .track-ctx__aerial scales it down in narrow cards automatically. */
+
+  /* Season Stats bento: compact 2-col grid on mobile (no rail, full viewport width).
+     Same 4-row structure as the intermediate breakpoint but shorter row heights
+     and tighter gaps to fit the narrower mobile viewport. */
+  .season-stats__inner {
+    padding: 48px 20px 56px;
+  }
+
+  .season-stats__heading {
+    font-size: 32px;
+    margin-bottom: 32px;
+  }
+
+  .season-stats__bento {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 200px 160px 160px 130px;
+    gap: 12px;
+  }
+
+  /* Override any intermediate placements (same structure, tighter rows) */
+  .bento-cell--season-wins  { grid-column: 1 / 3; grid-row: 1; }
+  .bento-cell--laps-led     { grid-column: 1;     grid-row: 2; transform: none; }
+  .bento-cell--heat-wins    { grid-column: 2;     grid-row: 2; height: auto; align-self: stretch; }
+  .bento-cell--miles        { grid-column: 1;     grid-row: 3; }
+  .bento-cell--total-events { grid-column: 2;     grid-row: 3; transform: none; }
+  .bento-cell--podiums      { grid-column: 1 / 3; grid-row: 4; height: auto; align-self: stretch; }
+
+  /* Scale all badge tiers down for narrow mobile cells */
+  .bento-badge--xl { width: 60px; height: 60px; padding: 7px; }
+  .bento-badge--md { width: 52px; height: 52px; padding: 6px; }
+  .bento-badge--sm { width: 44px; height: 44px; padding: 5px; }
+  .bento-cell--season-wins  .bento-badge__num { font-size: 24px; }
+  .bento-cell--laps-led     .bento-badge__num { font-size: 20px; }
+  .bento-cell--total-events .bento-badge__num { font-size: 22px; }
+  .bento-cell--miles        .bento-badge__num { font-size: 15px; }
+  .bento-cell--heat-wins    .bento-badge__num { font-size: 18px; }
+  .bento-cell--podiums      .bento-badge__num { font-size: 18px; }
 
   /* Standings: single-column stack on mobile, P1 first */
   .standings__inner {

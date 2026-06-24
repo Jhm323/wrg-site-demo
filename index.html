@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <!-- <html lang="en" data-brand="woo-sprint"> -->
-<!-- <html lang="en" data-brand="super-dirtcar"> -->
-  <html lang="en" data-brand="woo-latemodel">
+<html lang="en" data-brand="super-dirtcar">
+  <!-- <html lang="en" data-brand="woo-latemodel"> -->
 
 <head>
   <meta charset="UTF-8">
@@ -570,8 +570,131 @@
       <div class="clay-divider" aria-hidden="true"></div>
     </section>
 
-    <section class="placeholder-section" aria-label="Season stats (placeholder)">
-      <p class="placeholder-section__label u-label">SEASON STATS</p>
+    <!-- LAYER 3.4: Season Stats — Bento mosaic of picture boxes -->
+    <!-- PRODUCTION: aggregate stats from WRG-PublicApi season stats endpoint -->
+    <!--
+      DIVIDER NOTE: no clay-dividers inside this section — the standings section's
+      bottom divider and the news section's top divider serve as this section's seams.
+      Adding dividers here would double up at each seam (one per adjacent section).
+    -->
+    <section class="season-stats" id="season-stats" aria-label="Season statistics">
+
+      <div class="season-stats__inner">
+        <h2 class="season-stats__heading" id="season-stats-heading">SEASON BY THE NUMBERS</h2>
+
+        <!--
+          BENTO MOSAIC — six picture-box cells, varying in size by stat importance.
+          4-col × 2-row CSS grid on desktop (≥ 1280px viewport); 2-col on 768px–1279px;
+          compact 2-col on mobile (< 768px). Count-up animation fires on scroll-into-view.
+          PRODUCTION: photos from WRG media asset library; stats from WRG-PublicApi
+          season aggregate stats endpoint.
+        -->
+        <div class="season-stats__bento" id="season-stats-cluster">
+
+          <!-- Season Wins — HERO cell, spans 2 cols, badge bottom-left -->
+          <div class="bento-cell bento-cell--season-wins">
+            <!--
+              PLACEHOLDER — production: race win celebration photo (checkered flag,
+              victory lane, or car crossing the finish line). Source from WRG media
+              assets; serve as WebP/AVIF from CloudFront CDN. alt="" — stat badge
+              provides the meaningful information; photo is decorative context.
+            -->
+            <img class="bento-cell__photo"
+                 src="https://picsum.photos/seed/dcwins/960/720"
+                 alt=""
+                 width="960" height="720"
+                 loading="lazy" decoding="async">
+            <div class="bento-badge bento-badge--xl bento-badge--bottom-left">
+              <span class="bento-badge__num u-mono-num" data-target="18" aria-live="off">18</span>
+              <span class="bento-badge__label u-label">Season Wins</span>
+            </div>
+          </div>
+
+          <!-- Laps Led — large single-col cell, badge bottom-right -->
+          <div class="bento-cell bento-cell--laps-led">
+            <!--
+              PLACEHOLDER — production: lead car photo from the front stretch,
+              clear air ahead, showing front-running position.
+            -->
+            <img class="bento-cell__photo"
+                 src="https://picsum.photos/seed/dclaps/480/720"
+                 alt=""
+                 width="480" height="720"
+                 loading="lazy" decoding="async">
+            <div class="bento-badge bento-badge--xl bento-badge--bottom-right">
+              <span class="bento-badge__num u-mono-num" data-target="847" aria-live="off">847</span>
+              <span class="bento-badge__label u-label">Laps Led</span>
+            </div>
+          </div>
+
+          <!-- Heat Race Wins — smaller cell (bottom-anchored in row), badge top-left -->
+          <div class="bento-cell bento-cell--heat-wins">
+            <!--
+              PLACEHOLDER — production: heat race start or checkered flag moment.
+            -->
+            <img class="bento-cell__photo"
+                 src="https://picsum.photos/seed/dcheat/480/480"
+                 alt=""
+                 width="480" height="480"
+                 loading="lazy" decoding="async">
+            <div class="bento-badge bento-badge--sm bento-badge--top-left">
+              <span class="bento-badge__num u-mono-num" data-target="62" aria-live="off">62</span>
+              <span class="bento-badge__label u-label">Heat Wins</span>
+            </div>
+          </div>
+
+          <!-- Miles of Racing — single-col cell, badge top-right -->
+          <div class="bento-cell bento-cell--miles">
+            <!--
+              PLACEHOLDER — production: aerial or in-car shot conveying distance
+              and speed (car at full throttle, long track shot).
+            -->
+            <img class="bento-cell__photo"
+                 src="https://picsum.photos/seed/dcmiles/480/520"
+                 alt=""
+                 width="480" height="520"
+                 loading="lazy" decoding="async">
+            <div class="bento-badge bento-badge--md bento-badge--top-right">
+              <span class="bento-badge__num u-mono-num" data-target="2481" aria-live="off">2,481</span>
+              <span class="bento-badge__label u-label">Miles</span>
+            </div>
+          </div>
+
+          <!-- Total Events — wide cell (spans 2 cols), badge top-left -->
+          <div class="bento-cell bento-cell--total-events">
+            <!--
+              PLACEHOLDER — production: panoramic event shot (grandstand, car
+              lineup, or full-field start).
+            -->
+            <img class="bento-cell__photo"
+                 src="https://picsum.photos/seed/dcevents/960/520"
+                 alt=""
+                 width="960" height="520"
+                 loading="lazy" decoding="async">
+            <div class="bento-badge bento-badge--md bento-badge--top-left">
+              <span class="bento-badge__num u-mono-num" data-target="47" aria-live="off">47</span>
+              <span class="bento-badge__label u-label">Total Events</span>
+            </div>
+          </div>
+
+          <!-- Podiums — smaller cell (top-anchored in row), badge bottom-right -->
+          <div class="bento-cell bento-cell--podiums">
+            <!--
+              PLACEHOLDER — production: podium or top-3 celebration photo.
+            -->
+            <img class="bento-cell__photo"
+                 src="https://picsum.photos/seed/dcpods/480/420"
+                 alt=""
+                 width="480" height="420"
+                 loading="lazy" decoding="async">
+            <div class="bento-badge bento-badge--sm bento-badge--bottom-right">
+              <span class="bento-badge__num u-mono-num" data-target="34" aria-live="off">34</span>
+              <span class="bento-badge__label u-label">Podiums</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </section>
 
     <!-- LAYER 3.5: News — Juventus horizontal card scroll pattern -->

@@ -313,3 +313,70 @@ const newsHeadingObserver = new IntersectionObserver(
 );
 
 newsHeadingObserver.observe(newsHeading);
+
+
+// ─── Season Stats count-up ────────────────────────────────────
+// PRODUCTION: aggregate stats from WRG-PublicApi season stats endpoint.
+// Each number animates 0 → final value over 1200ms ease-out via rAF,
+// with 100ms stagger between the six stats (DOM order).
+// Under prefers-reduced-motion: display final values immediately, no animation.
+
+const seasonStatsHeading = document.querySelector('.season-stats__heading');
+const seasonStatsCluster = document.getElementById('season-stats-cluster');
+const statNums = document.querySelectorAll('.bento-badge__num[data-target]');
+
+// Landmark Settle: heading reveal when it enters viewport
+const statsHeadingObs = new IntersectionObserver(
+  ([entry]) => {
+    if (entry.isIntersecting) {
+      seasonStatsHeading.classList.add('season-stats__heading--visible');
+      statsHeadingObs.disconnect();
+    }
+  },
+  { threshold: 0.25 }
+);
+statsHeadingObs.observe(seasonStatsHeading);
+
+// Ease-out cubic — fast start, gradual deceleration into the final value
+function easeOutCubic(t) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function animateStatNum(el, delay) {
+  const target = parseInt(el.dataset.target, 10);
+  const duration = 1200;
+
+  setTimeout(() => {
+    const start = performance.now();
+
+    function tick(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const value = Math.round(easeOutCubic(progress) * target);
+      el.textContent = value.toLocaleString('en-US');
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      }
+      // When progress reaches exactly 1: value = target, loop exits cleanly.
+    }
+
+    requestAnimationFrame(tick);
+  }, delay);
+}
+
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // Reduced-motion: HTML already contains final formatted values — nothing to do.
+} else {
+  // Reset all stat nums to 0 immediately; count up when cluster enters viewport.
+  statNums.forEach(el => { el.textContent = '0'; });
+
+  const statsClusterObs = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        statNums.forEach((el, i) => animateStatNum(el, i * 100));
+        statsClusterObs.disconnect();
+      }
+    },
+    { threshold: 0.3 }
+  );
+  statsClusterObs.observe(seasonStatsCluster);
+}
