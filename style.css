@@ -989,10 +989,9 @@ img {
 /*
  * Block type 2 within .floating-blocks. Inherits all .floating-block__card base styles
  * (clay bg, border, radius, padding, racecar-launch entrance, hover lunge).
- * Distinct internal layout — visual zone + winners list — not a replacement for
- * editorial blocks; both coexist in the section.
+ * Layout: header row (flag + title) → location line → aerial photo → winners list.
  * PRODUCTION: venue + winners data from WRG-PublicApi.
- * Graceful degradation: if aerial image is absent, winners list + globe carry the card.
+ * Graceful degradation: if aerial absent, title + winners list carry the card.
  */
 
 .track-ctx__header {
@@ -1029,69 +1028,22 @@ img {
   margin-bottom: 22px;
 }
 
-/* Visual zone: layered z-stack. Globe fills the zone as a background texture (abs);
-   aerial wrap is in normal flow so it sets the zone height. overflow:hidden keeps
-   both layers clipped to the card bounds at all widths.
-   min-height ensures the globe texture is visible if the aerial is absent. */
-.track-ctx__visual {
-  position: relative;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  overflow: hidden;
-  min-height: 80px;
-}
-
-/* Globe wrap: back layer — fills the zone completely via absolute positioning */
-.track-ctx__globe-wrap {
-  position: absolute;
-  inset: 0;
-}
-
-/* Placeholder dotted-world-map background — softened (opacity 0.55) so it reads as
-   a design texture behind the aerial, not a labeled focal element of its own.
-   Fills globe-wrap completely; no border/radius (parent .track-ctx__visual handles that).
-   PRODUCTION: replace .track-ctx__globe div with a <picture> element (see HTML comment).
-   Shared asset; loading="lazy" required per image performance conventions (§ 7). */
-.track-ctx__globe {
-  width: 100%;
-  height: 100%;
-  background:
-    radial-gradient(
-      circle,
-      color-mix(in srgb, var(--dc-track-gray) 48%, transparent) 1px,
-      transparent 1px
-    ),
-    color-mix(in srgb, var(--dc-black) 65%, var(--dc-clay));
-  background-size: 9px 9px, 100% 100%;
-  position: relative;
-  overflow: hidden;
-  opacity: 0.55;
-}
-
-/* Aerial wrap: front layer, in normal flow so it sets the zone height.
-   z-index:1 lifts it above the absolute globe layer. */
+/* Aerial track photo — clean full-width element, no layering.
+   aspect-ratio prevents CLS (matches intrinsic width="220" height="130").
+   object-fit:cover handles production images whose dimensions may vary. */
 .track-ctx__aerial-wrap {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px;
+  display: block;
+  margin-bottom: 20px;
 }
 
-/* Aerial photo — placeholder or production AVIF/WebP from yoda CDN.
-   max-width:100% scales the image down in narrow containers without layout shift
-   (intrinsic width="220" height="130" on <img> and aspect-ratio here prevent CLS).
-   object-fit:cover maintains fill if production source dimensions vary. */
 .track-ctx__aerial {
   display: block;
-  width: 220px;
-  max-width: 100%;
+  width: 100%;
   aspect-ratio: 220 / 130;
   object-fit: cover;
   border-radius: 4px;
   border: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+  margin-bottom: 6px;
 }
 
 /* Label beneath the aerial view */
@@ -1101,27 +1053,6 @@ img {
   color: var(--dc-track-gray);
   text-align: center;
   margin: 0;
-}
-
-/* Location pin — absolute-positioned at Knoxville IA Mercator coords (41.3°N 93.1°W) */
-.track-ctx__pin {
-  position: absolute;
-  left: 23%;
-  top: 31%;
-  width: 10px;
-  height: 10px;
-  background: var(--brand-primary);
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* Outer ring on the pin */
-.track-ctx__pin::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border: 1.5px solid color-mix(in srgb, var(--brand-primary) 50%, transparent);
-  border-radius: 50%;
 }
 
 /* Past winners list */
@@ -2078,8 +2009,6 @@ img {
     font-size: 26px;
   }
 
-  /* Track context card: z-stack visual zone is responsive without mobile overrides.
-     max-width:100% on .track-ctx__aerial scales it down in narrow cards automatically. */
 
   /* Season Stats bento: compact 2-col grid on mobile (no rail, full viewport width).
      Same 4-row structure as the intermediate breakpoint but shorter row heights

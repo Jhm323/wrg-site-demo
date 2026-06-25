@@ -423,60 +423,23 @@
             </div>
             <p class="track-ctx__location u-label">Knoxville, Iowa &middot; &frac12; Mile Dirt Oval</p>
 
-            <!-- Visual zone: layered z-stack. Globe is a background texture layer;
-                 aerial track view sits on top as the focal element.
-                 aria-hidden — decorative graphics; semantic content is the winners list below. -->
-            <div class="track-ctx__visual" aria-hidden="true">
-
-              <!-- BACK LAYER: world-map background with location pin.
-                   Globe reads as a design/texture layer — no zone label here. -->
-              <!-- GLOBE + LOCATION PIN — PLACEHOLDER.
-                   PRODUCTION: one reusable world-map asset (WebP/AVIF from CloudFront CDN)
-                   shared across all tracks. Pin is positioned from the track's real lat/long
-                   coordinates (available in the DB / racing_track table).
-                   Knoxville IA: 41.30°N 93.10°W → Mercator ≈ 23% from left, 31% from top.
-                   PROD markup:
-                     <picture>
-                       <source type="image/avif" srcset="world-map.avif">
-                       <source type="image/webp" srcset="world-map.webp">
-                       <img class="track-ctx__globe-img" src="world-map.jpg" alt=""
-                            width="200" height="130" loading="lazy" decoding="async">
-                     </picture>
-                   alt="" — zone is aria-hidden; no meaningful alternative needed.
-                   loading="lazy" — below the fold (image perf conventions § 7). -->
-              <div class="track-ctx__globe-wrap">
-                <div class="track-ctx__globe">
-                  <!-- Pin: absolute-positioned at Knoxville IA Mercator coords (41.3°N 93.1°W). -->
-                  <span class="track-ctx__pin"></span>
-                </div>
-              </div>
-
-              <!-- FRONT LAYER: aerial track view, centered over the globe background.
-                   Graceful degradation: if aerial is absent, globe + name + winners carry the card. -->
-              <!-- AERIAL TRACK VIEW — PLACEHOLDER.
-                   PRODUCTION: aerial/satellite photo from the yoda asset/marketing folder,
-                   keyed by track. Real photography of the actual venue — preferred over a
-                   vector outline for authenticity. Serve as WebP/AVIF, sized to the card,
-                   loading="lazy". Fallback: if a track lacks an aerial, hide this element
-                   gracefully (card still works via name + globe + winners):
-                   CSS → .track-ctx__aerial-wrap:not(:has(img[src])) { display: none; }
-                   or JS → if (!aerial.src) aerialWrap.hidden = true; -->
-              <figure class="track-ctx__aerial-wrap">
-                <!-- Placeholder: stock landscape at aerial aspect ratio (220×130).
-                     PRODUCTION: <picture> with AVIF + WebP sources from yoda CDN. -->
-                <!-- WRG aerial track photo — real but illustrative;
-                     production will serve venue-specific aerials from WRG media library. -->
-                <img class="track-ctx__aerial"
-                     src="assets/photos/DSC_8585.jpg"
-                     alt=""
-                     width="220"
-                     height="130"
-                     loading="lazy"
-                     decoding="async">
-                <p class="track-ctx__zone-label u-label">AERIAL VIEW</p>
-              </figure>
-
-            </div>
+            <!-- Aerial track view — clean, full-width, no layering.
+                 PRODUCTION: aerial/satellite photo from the yoda asset/marketing folder,
+                 keyed by track. Serve as WebP/AVIF. Fallback: if absent, hide this element
+                 gracefully (card still works via name + map chip + winners):
+                 CSS → .track-ctx__aerial-wrap:not(:has(img[src])) { display: none; } -->
+            <figure class="track-ctx__aerial-wrap" aria-hidden="true">
+              <!-- WRG aerial track photo — real but illustrative;
+                   production will serve venue-specific aerials from WRG media library. -->
+              <img class="track-ctx__aerial"
+                   src="assets/photos/DSC_8585.jpg"
+                   alt=""
+                   width="220"
+                   height="130"
+                   loading="lazy"
+                   decoding="async">
+              <p class="track-ctx__zone-label u-label">AERIAL VIEW</p>
+            </figure>
 
             <!-- PAST WINNERS LIST
                  PRODUCTION: query WRG-PublicApi /tracks/{track_ID}/results?series={entity_ID}
