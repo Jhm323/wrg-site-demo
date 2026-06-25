@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<!-- <html lang="en" data-brand="woo-sprint"> -->
 <html lang="en" data-brand="super-dirtcar">
-  <!-- <html lang="en" data-brand="woo-latemodel"> -->
 
 <head>
   <meta charset="UTF-8">
@@ -184,7 +182,7 @@
                  aria-roledescription="slide"
                  aria-label="Slide 1 of 4: Donny Schatz">
           <!--
-            PROD: replace .hero__photo div with a <picture> element (slide 1 only):
+            PROD: upgrade <img> to <picture> with CDN-hosted AVIF/WebP (slide 1 only):
             <picture>
               <source type="image/avif" srcset="hero-schatz.avif">
               <source type="image/webp" srcset="hero-schatz.webp">
@@ -487,20 +485,13 @@
           <!-- P1 — champion; desktop center (order:2), mobile first (order:1) -->
           <article class="standings__card standings__card--p1" aria-label="1st place: Donny Schatz">
             <!--
-              PROD: replace .standings__photo div (P1 — ~400 px wide × 500 px tall):
+              PROD: upgrade to <picture> with CDN-hosted AVIF/WebP per driver (P1 — 400×500):
               <picture>
                 <source type="image/avif" srcset="driver-schatz.avif">
                 <source type="image/webp" srcset="driver-schatz.webp">
-                <img class="standings__photo"
-                     src="driver-schatz.jpg"
-                     alt=""
-                     width="400" height="500"
-                     loading="lazy" decoding="async">
+                <img class="standings__photo" src="driver-schatz.jpg" alt=""
+                     width="400" height="500" loading="lazy" decoding="async">
               </picture>
-              alt="" because the article's aria-label already names the driver;
-              the photo is supplementary. Card is position:relative so the img
-              must be position:absolute; inset:0; width:100%; height:100%;
-              object-fit:cover (add to .standings__photo img rule in CSS).
             -->
             <!-- WRG racing photo — real but illustrative; production uses driver-specific
                  portraits from WRG media library served as WebP/AVIF from CloudFront CDN. -->
@@ -520,15 +511,12 @@
           <!-- P2 — desktop left flank (order:1) -->
           <article class="standings__card standings__card--p2" aria-label="2nd place: Kerry Madsen">
             <!--
-              PROD: replace .standings__photo div (P2 — ~308 px wide × 360 px tall):
+              PROD: upgrade to <picture> with CDN-hosted AVIF/WebP per driver (P2 — 308×360):
               <picture>
                 <source type="image/avif" srcset="driver-madsen.avif">
                 <source type="image/webp" srcset="driver-madsen.webp">
-                <img class="standings__photo"
-                     src="driver-madsen.jpg"
-                     alt=""
-                     width="308" height="360"
-                     loading="lazy" decoding="async">
+                <img class="standings__photo" src="driver-madsen.jpg" alt=""
+                     width="308" height="360" loading="lazy" decoding="async">
               </picture>
             -->
             <!-- WRG racing photo — real but illustrative; production uses driver-specific portraits. -->
@@ -548,15 +536,12 @@
           <!-- P3 — desktop right flank (order:3) -->
           <article class="standings__card standings__card--p3" aria-label="3rd place: Grant Logan">
             <!--
-              PROD: replace .standings__photo div (P3 — ~308 px wide × 310 px tall):
+              PROD: upgrade to <picture> with CDN-hosted AVIF/WebP per driver (P3 — 308×310):
               <picture>
                 <source type="image/avif" srcset="driver-logan.avif">
                 <source type="image/webp" srcset="driver-logan.webp">
-                <img class="standings__photo"
-                     src="driver-logan.jpg"
-                     alt=""
-                     width="308" height="310"
-                     loading="lazy" decoding="async">
+                <img class="standings__photo" src="driver-logan.jpg" alt=""
+                     width="308" height="310" loading="lazy" decoding="async">
               </picture>
             -->
             <!-- WRG racing photo — real but illustrative; production uses driver-specific portraits. -->
