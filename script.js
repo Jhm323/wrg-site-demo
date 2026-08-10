@@ -1,8 +1,6 @@
-/* ============================================================
-   DIRTcar Racing Demo — Shell JS
+/* DIRTcar Racing Demo — Shell JS
    Scope: countdown tick, pill collapse, nav drawer.
-   No content-section logic yet.
-   ============================================================ */
+   No content-section logic yet.  */
 
 'use strict';
 
@@ -11,11 +9,11 @@
 const isLive = true;
 
 
-// ─── Countdown timer ─────────────────────────────────────────
-// Placeholder target: Knoxville Nationals, July 9 2026, 7:00 PM CDT
+// Countdown timer                           
+// Placeholder target: Knoxville Nationals, August 13 2026, 7:00 PM CDT
 // Production: target date comes from WRG-PublicApi next-event endpoint.
 
-const RACE_DATE = new Date('2026-07-09T19:00:00-05:00');
+const RACE_DATE = new Date('2026-08-13T19:00:00-05:00');
 
 const cdDays  = document.getElementById('cd-days');
 const cdHours = document.getElementById('cd-hours');
@@ -47,7 +45,7 @@ tickCountdown();
 setInterval(tickCountdown, 1000);
 
 
-// ─── Pill header collapse ─────────────────────────────────────
+// Pill header collapse                         
 // IntersectionObserver watches #scroll-sentinel (immediately after the hero
 // section). When sentinel exits the viewport (user scrolled past hero), pill
 // collapses to compact logo + hamburger + CTA cluster.
@@ -127,7 +125,7 @@ window.addEventListener('resize', () => {
 })();
 
 
-// ─── Nav drawer ───────────────────────────────────────────────
+// Nav drawer                                
 // showModal() creates a top-layer modal with native focus trap and Escape key.
 // Backdrop click detection uses getBoundingClientRect to check if the click
 // landed outside the dialog content box.
@@ -171,7 +169,7 @@ function closeDrawer() {
 }
 
 
-// ─── Hero carousel ──────────────────────────────────────────
+// Hero carousel                             
 // PRODUCTION: slide data from WRG-PublicApi race-results endpoint.
 // Auto-advances every 5s. Crossfade via CSS opacity transition (decorative —
 // suppressed under reduced-motion). Auto-advance is NOT suppressed: navigating
@@ -217,7 +215,7 @@ heroDots.forEach((dot, i) => {
 heroTimer = setInterval(advanceHero, SLIDE_MS);
 
 
-// ─── Featured section (floating blocks) ──────────────────────
+// Featured section (floating blocks)               
 // Racecar launch entrance: each block fires independently when it enters the viewport.
 // CSS handles the stagger (animation-delay via nth-child) and the 3-phase launch curve
 // (explosive start → 5 px overshoot → firm settle). JS only adds --visible per block.
@@ -240,7 +238,7 @@ const blockObserver = new IntersectionObserver(
 floatingBlocks.forEach(block => blockObserver.observe(block));
 
 
-// ─── Standings section ────────────────────────────────────────
+// Standings section                           
 // Heading Landmark Settle + podium Settle-In Reveal (P2→P1→P3).
 // PRODUCTION: driver data from WRG-PublicApi driver/standings tables.
 
@@ -273,7 +271,7 @@ const podiumObserver = new IntersectionObserver(
 podiumObserver.observe(standingsPodium);
 
 
-// ─── News section ─────────────────────────────────────────────
+// News section                               
 // Arrow button controls and heading reveal.
 // PRODUCTION: card data from WRG-PublicApi news endpoint.
 
@@ -315,7 +313,7 @@ const newsHeadingObserver = new IntersectionObserver(
 newsHeadingObserver.observe(newsHeading);
 
 
-// ─── Season Stats count-up ────────────────────────────────────
+// Season Stats count-up                         
 // PRODUCTION: aggregate stats from WRG-PublicApi season stats endpoint.
 // Each number animates 0 → final value over 1200ms ease-out via rAF,
 // with 100ms stagger between the six stats (DOM order).
@@ -382,7 +380,7 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 }
 
 
-// ─── DEV MODE panel — team review tool; not part of production ───────────
+// DEV MODE panel — team review tool; not part of production       
 // Controls skin (data-brand on <html>) and isLive state live, no reload.
 // State lives in memory only — page reload resets to current HTML defaults.
 
@@ -393,7 +391,7 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   const skinBtns    = document.querySelectorAll('.devpanel__skin-btn');
   const isLiveCheck = document.getElementById('devpanel-islive');
 
-  // ── Collapse / expand ────────────────────────────────────────
+  //  Collapse / expand                           
   toggleBtn.addEventListener('click', () => {
     const isOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
     toggleBtn.setAttribute('aria-expanded', String(!isOpen));
@@ -411,7 +409,7 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     }
   });
 
-  // ── Skin switcher ────────────────────────────────────────────
+  //  Skin switcher                             
   function setActiveSkin(brand) {
     document.documentElement.setAttribute('data-brand', brand);
     skinBtns.forEach(btn => {
@@ -426,7 +424,7 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     btn.addEventListener('click', () => setActiveSkin(btn.dataset.brand));
   });
 
-  // ── isLive toggle ────────────────────────────────────────────
+  //  isLive toggle                             
   // Reaches pillHeader and watchLiveBtn defined in module scope above.
   function applyLiveState(live) {
     pillHeader.classList.toggle('pill-header--has-live', live);

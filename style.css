@@ -1,28 +1,23 @@
-/* ============================================================
-   DESIGN TOKENS
-   Custom properties — the only place hex values are allowed.
-   Component rules reference var(--dc-*) and var(--brand-*) only.
-   ============================================================ */
 
 :root {
   /* Structural neutrals — warm bias, NCS Y50R family */
-  --dc-black:      #0D0D0D;
-  --dc-clay:       #3A2418;
-  --dc-yellow:     #F4B400;
-  --dc-red:        #C8102E;
-  --dc-bone:       #EDE8DD;
+  --dc-black:  #0D0D0D;
+  --dc-clay: #3A2418;
+  --dc-yellow: #F4B400;
+  --dc-red:  #C8102E;
+  --dc-bone: #EDE8DD;
   --dc-track-gray: #8C8579;
 
   /* Typography families */
   --font-display: 'Anton', sans-serif;
-  --font-label:   'Oswald', sans-serif;
-  --font-body:    'Inter', sans-serif;
-  --font-mono:    'JetBrains Mono', monospace;
+  --font-label: 'Oswald', sans-serif;
+  --font-body:  'Inter', sans-serif;
+  --font-mono:  'JetBrains Mono', monospace;
 
   /* Layout dimensions */
-  --rail-width:    320px;
-  --pill-top:      16px;
-  --pill-pad-x:    24px;
+  --rail-width:  320px;
+  --pill-top:  16px;
+  --pill-pad-x:  24px;
   --mobile-bar-h:  56px;
 }
 
@@ -30,28 +25,26 @@
 
 [data-brand="woo-sprint"] {
   /* World of Outlaws Sprint Car Series — racing_entity_ID 91 */
-  --brand-primary:   #0C7ABF;
+  --brand-primary: #0C7ABF;
   --brand-secondary: #F37937;
 }
 
 [data-brand="woo-latemodel"] {
   /* World of Outlaws Late Model Series — racing_entity_ID 90 */
-  --brand-primary:   #FFDE00;
+  --brand-primary: #FFDE00;
   --brand-secondary: #000000;
 }
 
 [data-brand="super-dirtcar"] {
   /* Super DIRTcar Series — racing_entity_ID 8 */
-  --brand-primary:   #EB1C25;
+  --brand-primary: #EB1C25;
   /* WARNING: #EB1C25 on --dc-black = 4.35:1 contrast. Passes large-text AA (3:1)
-     only. Never use --brand-primary as body-weight text in this skin. */
+ only. Never use --brand-primary as body-weight text in this skin. */
   --brand-secondary: #F4B400;  /* DERIVED — no secondary_HTML_color in DB; placeholder */
 }
 
 
-/* ============================================================
-   RESETS
-   ============================================================ */
+/* RESETS */
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -98,9 +91,7 @@ img {
 }
 
 
-/* ============================================================
-   TYPOGRAPHY
-   ============================================================ */
+/* TYPOGRAPHY */
 
 /* Anton — display headlines, uppercase only, never below 24px */
 /* Oswald — labels, nav items, eyebrows, max 14px in label contexts */
@@ -115,21 +106,17 @@ img {
 }
 
 
-/* ============================================================
-   LAYOUT — Three-Layer Depth System
-   ============================================================
+/* LAYOUT — Three-Layer Depth System 
+ Layer 2  z-index: 0 position:fixed  — graded background, never scrolls
+ Layer 1A z-index: 30  position:fixed  — left rail, DATA frame
+ Layer 1B z-index: 30  position:fixed  — pill header, NAVIGATION frame
+ Layer 3  z-index: 10  normal flow — scrolling content channel
+ */
 
-   Layer 2  z-index: 0   position:fixed  — graded background, never scrolls
-   Layer 1A z-index: 30  position:fixed  — left rail, DATA frame
-   Layer 1B z-index: 30  position:fixed  — pill header, NAVIGATION frame
-   Layer 3  z-index: 10  normal flow     — scrolling content channel
-
-   ============================================================ */
-
-/* --- Layer 2: Fixed graded background --- */
+/* Layer 2: Fixed graded background */
 /* iOS Safari note: background-attachment:fixed does not render on iOS Safari.
-   Layer 2 degrades to a static (scrolling) background on that platform.
-   The three-layer depth model becomes two-layer on iOS mobile. */
+ Layer 2 degrades to a static (scrolling) background on that platform.
+ The three-layer depth model becomes two-layer on iOS mobile. */
 .layer-bg {
   position: fixed;
   inset: 0;
@@ -138,21 +125,21 @@ img {
   background: linear-gradient(150deg, var(--dc-clay) 0%, var(--dc-black) 100%);
 }
 
-/* Salzburgring treatment: real race-action photo + sepia/brown grade.
-   filter applied to ::before only — vignette (::after) is unaffected. */
+/* 'Hero' Background - real race-action photo + sepia/brown grade.
+ filter applied to ::before only — vignette (::after) is unaffected. */
 /*
-   PROD IMAGE — Layer 2 background (heaviest single asset):
-   • Serve as AVIF first, WebP fallback, from CloudFront CDN.
-   • Target ≤ 200 KB at 1920×1080 (AVIF at q55 or WebP at q75–80).
-     At 4K screens a 2560×1440 srcset variant is worth the extra weight.
-   • LQIP: serve a 32×18 base64-blurred JPEG as the initial background-image
-     (loads inline, no extra request), then swap in the full URL once loaded.
-     Swap can be done in JS via a hidden Image() object; set background-image
-     on load. Gives a warm color-fill during load rather than solid black.
-   • Coordinate URL update with floating-blocks copy — the photo must depict
-     the same event as the editorial blocks (see HTML comment on #schedule).
-   • The token-based gradient on .layer-bg is the load-failure fallback.
-     Do not remove it.
+ PROD IMAGE — Layer 2 background (heaviest single asset):
+ • Serve as AVIF first, WebP fallback, from CloudFront CDN.
+ • Target ≤ 200 KB at 1920×1080 (AVIF at q55 or WebP at q75–80).
+ At 4K screens a 2560×1440 srcset variant is worth the extra weight.
+ • LQIP: serve a 32×18 base64-blurred JPEG as the initial background-image
+ (loads inline, no extra request), then swap in the full URL once loaded.
+ Swap can be done in JS via a hidden Image() object; set background-image
+ on load. Gives a warm color-fill during load rather than solid black.
+ • Coordinate URL update with floating-blocks copy — the photo must depict
+ the same event as the editorial blocks (see HTML comment on #schedule).
+ • The token-based gradient on .layer-bg is the load-failure fallback.
+ Do not remove it.
 */
 .layer-bg::before {
   content: '';
@@ -163,8 +150,8 @@ img {
   background-size: cover;
   background-position: center 30%;
   /* Sepia/brown grade: pushes vivid photo colors toward warm desaturated tone.
-     Result: recognizable photo texture with brownish, moody, race-night quality.
-     Adjust sepia() and saturate() together — both are needed to kill chroma fully. */
+ Result: recognizable photo texture with brownish, moody, race-night quality.
+ Adjust sepia() and saturate() together — both are needed to kill chroma fully. */
   filter: sepia(0.75) saturate(0.55) brightness(0.60);
 }
 
@@ -174,14 +161,14 @@ img {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    ellipse 85% 85% at 50% 40%,
-    transparent 30%,
-    color-mix(in srgb, var(--dc-black) 55%, transparent) 70%,
-    color-mix(in srgb, var(--dc-black) 82%, transparent) 100%
+  ellipse 85% 85% at 50% 40%,
+  transparent 30%,
+  color-mix(in srgb, var(--dc-black) 55%, transparent) 70%,
+  color-mix(in srgb, var(--dc-black) 82%, transparent) 100%
   );
 }
 
-/* --- Layer 1A: Left rail --- */
+/* Layer 1A: Left rail */
 .rail {
   position: fixed;
   left: 0;
@@ -196,7 +183,7 @@ img {
   border-right: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
 }
 
-/* --- Layer 1B: Top pill header --- */
+/* Layer 1B: Top pill header */
 /* Spans right content column only: left: var(--rail-width) to right: 0 */
 .pill-header {
   position: fixed;
@@ -225,7 +212,7 @@ img {
   overflow: hidden;
 }
 
-/* --- Layer 3: Scrolling content --- */
+/* Layer 3: Scrolling content */
 .content-channel {
   position: relative;
   z-index: 10;
@@ -241,11 +228,9 @@ img {
 }
 
 
-/* ============================================================
-   COMPONENTS
-   ============================================================ */
+/* COMPONENTS */
 
-/* --- Rail: Logo module --- */
+/* Rail: Logo module */
 .rail__logo {
   flex-shrink: 0;
   padding: 22px 24px 18px;
@@ -261,7 +246,7 @@ img {
   display: block;
 }
 
-/* --- Rail: Ticker module (countdown + next race) --- */
+/* Rail: Ticker module (countdown + next race) */
 .rail__ticker {
   flex-shrink: 0;
   padding: 14px 24px 18px;
@@ -327,7 +312,7 @@ img {
   user-select: none;
 }
 
-/* --- Rail: Schedule module (internally scrollable) --- */
+/* Rail: Schedule module (internally scrollable) */
 .rail__schedule {
   flex: 1;
   min-height: 0;
@@ -393,7 +378,7 @@ img {
   color: var(--dc-bone);
 }
 
-/* --- Rail: Standings module --- */
+/* Rail: Standings module */
 .rail__standings {
   flex-shrink: 0;
   padding: 16px 24px;
@@ -437,7 +422,7 @@ img {
   flex-shrink: 0;
 }
 
-/* --- Rail: CTA module (pinned bottom) --- */
+/* Rail: CTA module (pinned bottom) */
 .rail__cta-wrap {
   flex-shrink: 0;
   padding: 18px 24px;
@@ -447,7 +432,7 @@ img {
   width: 100%;
 }
 
-/* --- Button --- */
+/* Button */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -466,7 +451,7 @@ img {
   border: none;
 }
 
-/* --- Pill header: expanded state (default) --- */
+/* Pill header: expanded state (default) */
 
 /* Logomark: invisible and inert when expanded */
 .pill-header__logomark {
@@ -538,9 +523,9 @@ img {
   flex-shrink: 0;
 }
 
-/* --- WATCH LIVE button (collapsed pill + isLive only) --- */
+/* WATCH LIVE button (collapsed pill + isLive only) */
 /* .pill-header--has-live is added by JS when isLive === true.
-   Button is hidden by default; visible in BOTH pill states when live. */
+ Button is hidden by default; visible in BOTH pill states when live. */
 .pill-watch-live {
   display: inline-flex;
   align-items: center;
@@ -574,13 +559,13 @@ img {
 }
 
 /* Live dot pulse: added under no-preference below.
-   Under reduced-motion: dot is visible and static (paused). */
+ Under reduced-motion: dot is visible and static (paused). */
 @keyframes live-pulse {
-  0%, 100% { opacity: 1;    }
-  50%       { opacity: 0.25; }
+  0%, 100% { opacity: 1;  }
+  50% { opacity: 0.25; }
 }
 
-/* --- Pill header: collapsed state --- */
+/* Pill header: collapsed state */
 /* Class toggled by IntersectionObserver in script.js when sentinel exits viewport */
 .pill-header--collapsed .pill-header__inner {
   max-width: 440px;
@@ -615,26 +600,26 @@ img {
 }
 
 /* Pill transitions — decorative, suppressed under reduced-motion.
-   Pill collapse still fires under reduced-motion (functional state change);
-   only the easing animation is suppressed — it snaps instantly. */
+ Pill collapse still fires under reduced-motion (functional state change);
+ only the easing animation is suppressed — it snaps instantly. */
 @media (prefers-reduced-motion: no-preference) {
   .pill-header__inner {
-    transition: max-width 250ms ease;
+  transition: max-width 250ms ease;
   }
 
   .pill-header__logomark,
   .pill-nav,
   .pill-header__hamburger,
   .pill-watch-live {
-    transition: max-width 250ms ease, opacity 220ms ease;
+  transition: max-width 250ms ease, opacity 220ms ease;
   }
 
   .pill-watch-live__dot {
-    animation: live-pulse 1.2s ease-in-out infinite;
+  animation: live-pulse 1.2s ease-in-out infinite;
   }
 }
 
-/* --- Nav drawer (mobile + collapsed hamburger) --- */
+/* Nav drawer (mobile + collapsed hamburger) */
 .nav-drawer {
   position: fixed;
   inset: 0;
@@ -709,14 +694,14 @@ img {
   color: var(--dc-track-gray);
 }
 
-/* --- Scroll sentinel --- */
+/* Scroll sentinel */
 .scroll-sentinel {
   height: 1px;
   margin-bottom: -1px;
   pointer-events: none;
 }
 
-/* --- Hero carousel (Layer 3.1) --- */
+/* Hero carousel (Layer 3.1) */
 /* PRODUCTION: slide content from WRG-PublicApi race-results endpoint */
 
 .hero {
@@ -744,7 +729,7 @@ img {
 }
 
 /* Full-bleed race photo — position:absolute fills the hero slide.
-   top center object-position keeps action (cars, crowds, dust) prominent. */
+ top center object-position keeps action (cars, crowds, dust) prominent. */
 .hero__photo {
   position: absolute;
   inset: 0;
@@ -755,14 +740,14 @@ img {
 }
 
 /* Brand directional gradient: lower-left origin → upper-right, ~40% opacity.
-   Legibility layer for hero__content at bottom-left. Swaps with --brand-primary per skin. */
+ Legibility layer for hero__content at bottom-left. Swaps with --brand-primary per skin. */
 .hero__grad {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to top right,
-    color-mix(in srgb, var(--brand-primary) 38%, transparent) 0%,
-    transparent 55%
+  to top right,
+  color-mix(in srgb, var(--brand-primary) 38%, transparent) 0%,
+  transparent 55%
   );
 }
 
@@ -824,24 +809,24 @@ img {
 }
 
 
-/* --- Clay-groove divider (§5 Signature Element) --- */
+/* Clay-groove divider (§5 Signature Element) */
 /* Raked clay surface: repeating diagonal stripe at 3°, --brand-primary at 70% opacity.
-   Uses --brand-primary (not secondary) because woo-latemodel secondary is #000000
-   and disappears on --dc-black. All three brand primaries are bright on dark. */
+ Uses --brand-primary (not secondary) because woo-latemodel secondary is #000000
+ and disappears on --dc-black. All three brand primaries are bright on dark. */
 .clay-divider {
   height: 28px;
   position: relative;
   z-index: 10;
   background: repeating-linear-gradient(
-    3deg,
-    color-mix(in srgb, var(--brand-primary) 70%, transparent) 0px,
-    color-mix(in srgb, var(--brand-primary) 70%, transparent) 4px,
-    var(--dc-black) 4px,
-    var(--dc-black) 8px
+  3deg,
+  color-mix(in srgb, var(--brand-primary) 70%, transparent) 0px,
+  color-mix(in srgb, var(--brand-primary) 70%, transparent) 4px,
+  var(--dc-black) 4px,
+  var(--dc-black) 8px
   );
 }
 
-/* --- Floating blocks (Layer 3.2) — Thibaut Courtois pattern --- */
+/*Floating blocks (Layer 3.2) — Thibaut Courtois pattern */
 /*
  * PRODUCTION: .layer-bg::before photograph must depict the SAME track/event
  * as the editorial blocks in this section. The background is the subject of
@@ -851,7 +836,7 @@ img {
  */
 
 /* NO background on this section — Layer 2 must show through the open space
-   around and between blocks. This is the keystone that proves the depth model. */
+ around and between blocks. This is the keystone that proves the depth model. */
 .floating-blocks {
   position: relative;
   z-index: 10;
@@ -866,8 +851,8 @@ img {
 }
 
 /* FEATURED section label — distinguishes this curated section from the horizontal
-   Latest News scroller. Keep the label understated: it identifies, not headlines.
-   INTENT: few blocks (2–3 + track context). High-volume news lives in Latest News. */
+ Latest News scroller. Keep the label understated: it identifies, not headlines.
+ INTENT: few blocks (2–3 + track context). High-volume news lives in Latest News. */
 .floating-blocks__header {
   padding: 0 48px;
   margin-bottom: 32px;
@@ -879,7 +864,7 @@ img {
 }
 
 /* .u-label sets color: --dc-track-gray; this muted bone reads as editorial identity,
-   not section navigation — intentionally quieter than the brand-primary eyebrows on cards */
+ not section navigation — intentionally quieter than the brand-primary eyebrows on cards */
 .floating-blocks__label.u-label {
   color: color-mix(in srgb, var(--dc-bone) 42%, transparent);
 }
@@ -949,7 +934,7 @@ img {
 }
 
 /* Editorial card picture box — negative margins counteract the 40px/44px card padding
-   so the photo bleeds edge-to-edge. overflow:hidden on the card clips it to rounded corners. */
+ so the photo bleeds edge-to-edge. overflow:hidden on the card clips it to rounded corners. */
 .floating-block__photo {
   margin: -40px -44px 28px;
   height: 220px;
@@ -963,7 +948,7 @@ img {
   object-position: center;
 }
 
-/* --- Track Context card (floating-block__card--track-context) --- */
+/* Track Context card (floating-block__card--track-context) */
 /*
  * Block type 2 within .floating-blocks. Inherits all .floating-block__card base styles
  * (clay bg, border, radius, padding, racecar-launch entrance, hover lunge).
@@ -1007,8 +992,8 @@ img {
 }
 
 /* Aerial track photo — clean full-width element, no layering.
-   aspect-ratio prevents CLS (matches intrinsic width="220" height="130").
-   object-fit:cover handles production images whose dimensions may vary. */
+ aspect-ratio prevents CLS (matches intrinsic width="220" height="130").
+ object-fit:cover handles production images whose dimensions may vary. */
 .track-ctx__aerial-wrap {
   display: block;
   margin-bottom: 20px;
@@ -1064,7 +1049,7 @@ img {
   flex-shrink: 0;
 }
 
-/* --- Standings section (Layer 3.3) — Formula 1 podium pattern --- */
+/* Standings section (Layer 3.3) — Formula 1 podium pattern */
 /* PRODUCTION: driver data from WRG-PublicApi driver/standings tables */
 
 .standings {
@@ -1095,7 +1080,7 @@ img {
 }
 
 /* Podium: flex row aligned at bottom — height difference creates podium-step look.
-   DOM order is P1, P2, P3 (semantic); CSS order rearranges to P2, P1, P3 on desktop. */
+ DOM order is P1, P2, P3 (semantic); CSS order rearranges to P2, P1, P3 on desktop. */
 .standings__podium {
   display: flex;
   align-items: flex-end;
@@ -1103,8 +1088,8 @@ img {
 }
 
 .standings__card--p1 { order: 2; flex: 1.3; height: 500px; }
-.standings__card--p2 { order: 1; flex: 1;   height: 360px; }
-.standings__card--p3 { order: 3; flex: 1;   height: 310px; }
+.standings__card--p2 { order: 1; flex: 1; height: 360px; }
+.standings__card--p3 { order: 3; flex: 1; height: 310px; }
 
 .standings__card {
   position: relative;
@@ -1113,8 +1098,8 @@ img {
 }
 
 /* Full-bleed race photo — position:absolute fills the standings card.
-   top center object-position keeps the action at the top of tall portrait cards.
-   loading="lazy" decoding="async" on all three — section is well below the fold. */
+ top center object-position keeps the action at the top of tall portrait cards.
+ loading="lazy" decoding="async" on all three — section is well below the fold. */
 .standings__photo {
   position: absolute;
   inset: 0;
@@ -1133,9 +1118,9 @@ img {
   right: 0;
   height: 67%;
   background: linear-gradient(
-    to top,
-    color-mix(in srgb, var(--brand-primary) 50%, transparent) 0%,
-    transparent 100%
+  to top,
+  color-mix(in srgb, var(--brand-primary) 50%, transparent) 0%,
+  transparent 100%
   );
   pointer-events: none;
 }
@@ -1155,11 +1140,11 @@ img {
   line-height: 0.9;
   color: var(--brand-secondary);
   /* Legibility when --brand-secondary is #000000 (woo-latemodel):
-     primary-tinted glow makes the black numeral pop against the brand wash;
-     hard dark drop shadow lifts it off any bright background. */
+ primary-tinted glow makes the black numeral pop against the brand wash;
+ hard dark drop shadow lifts it off any bright background. */
   text-shadow:
-    0 0 36px color-mix(in srgb, var(--brand-primary) 70%, transparent),
-    0 2px 8px color-mix(in srgb, var(--dc-black) 98%, transparent);
+  0 0 36px color-mix(in srgb, var(--brand-primary) 70%, transparent),
+  0 2px 8px color-mix(in srgb, var(--dc-black) 98%, transparent);
 }
 
 .standings__name {
@@ -1219,14 +1204,14 @@ img {
   flex-shrink: 0;
 }
 
-/* --- Season Stats section (Layer 3.4) — Bento mosaic of picture boxes --- */
+/*Season Stats section (Layer 3.4) — Bento mosaic of picture boxes */
 /* PRODUCTION: aggregate stats from WRG-PublicApi season stats endpoint */
 
 .season-stats {
   position: relative;
   z-index: 10;
   /* Semi-transparent: Layer 2 breathes through the section background and through
-     the open grid tracks around the bento cells. Individual cells are fully opaque. */
+ the open grid tracks around the bento cells. Individual cells are fully opaque. */
   background: color-mix(in srgb, var(--dc-black) 78%, transparent);
 }
 
@@ -1252,11 +1237,11 @@ img {
   transform: none;
 }
 
-/* ── Bento mosaic — 4-col × 2-row picture grid (desktop ≥ 1280px) ──────────
-   Season Wins spans 2 cols (hero cell); Heat Wins is shorter and bottom-anchored;
-   Podiums is shorter and top-anchored. translateY stagger on Laps Led and Total
-   Events breaks the rigid grid rhythm; values stay smaller than the 20px gap so
-   no visual cell-to-cell overlap occurs. */
+/* Bento mosaic — 4-col × 2-row picture grid (desktop ≥ 1280px) 
+ Season Wins spans 2 cols (hero cell); Heat Wins is shorter and bottom-anchored;
+ Podiums is shorter and top-anchored. translateY stagger on Laps Led and Total
+ Events breaks the rigid grid rhythm; values stay smaller than the 20px gap so
+ no visual cell-to-cell overlap occurs. */
 .season-stats__bento {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1266,13 +1251,13 @@ img {
 
 /* Cell grid assignments */
 .bento-cell--season-wins  { grid-column: 1 / 3; grid-row: 1; }
-.bento-cell--laps-led     { grid-column: 3;     grid-row: 1; transform: translateY(10px); }
-.bento-cell--heat-wins    { grid-column: 4;     grid-row: 1; align-self: end; height: 240px; }
-.bento-cell--miles        { grid-column: 1;     grid-row: 2; }
+.bento-cell--laps-led { grid-column: 3; grid-row: 1; transform: translateY(10px); }
+.bento-cell--heat-wins  { grid-column: 4; grid-row: 1; align-self: end; height: 240px; }
+.bento-cell--miles  { grid-column: 1; grid-row: 2; }
 .bento-cell--total-events { grid-column: 2 / 4; grid-row: 2; transform: translateY(-10px); }
-.bento-cell--podiums      { grid-column: 4;     grid-row: 2; align-self: start; height: 210px; }
+.bento-cell--podiums  { grid-column: 4; grid-row: 2; align-self: start; height: 210px; }
 
-/* ── Base picture box ──────────────────────────────────────────────────────── */
+/*Base picture box */
 .bento-cell {
   position: relative;
   overflow: hidden;
@@ -1291,12 +1276,12 @@ img {
   filter: sepia(0.4) saturate(0.65) brightness(0.72);
 }
 
-/* ── Stat badges (square corner stickers) ──────────────────────────────────
-   Each badge is an opaque square box nested in one corner of its cell photo.
-   NOT a horizontal caption bar — the badge is a discrete sticker shape ON TOP
-   of the photo. Badges are STRAIGHT (no rotation); corners vary per cell for
-   visual interest. 12px inset so badges read as "placed on" the photo, not
-   pixel-clipped to the literal cell corner. */
+/* Stat badges (square corner stickers) 
+ Each badge is an opaque square box nested in one corner of its cell photo.
+ NOT a horizontal caption bar — the badge is a discrete sticker shape ON TOP
+ of the photo. Badges are STRAIGHT (no rotation); corners vary per cell for
+ visual interest. 12px inset so badges read as "placed on" the photo, not
+ pixel-clipped to the literal cell corner. */
 .bento-badge {
   position: absolute;
   display: flex;
@@ -1316,8 +1301,8 @@ img {
 .bento-badge--sm { width: 56px; height: 56px; padding: 7px; }
 
 /* Corner placement */
-.bento-badge--top-left     { top: 12px;    left: 12px; }
-.bento-badge--top-right    { top: 12px;    right: 12px; }
+.bento-badge--top-left { top: 12px;  left: 12px; }
+.bento-badge--top-right  { top: 12px;  right: 12px; }
 .bento-badge--bottom-left  { bottom: 12px; left: 12px; }
 .bento-badge--bottom-right { bottom: 12px; right: 12px; }
 
@@ -1329,16 +1314,16 @@ img {
 }
 
 /* Per-cell font sizes — sized to fit digit count within badge inner width.
-   JetBrains Mono char width ≈ 0.6× font-size; inner width = badge − 2×padding.
-   "18" (2ch) at 40px → ~48px in 68px inner (88−20) ✓
-   "847" (3ch) at 34px → ~61px in 68px inner ✓
-   "2,481" (5ch) at 18px → ~54px in 56px inner (72−16) ✓ */
+ JetBrains Mono char width ≈ 0.6× font-size; inner width = badge − 2×padding.
+ "18" (2ch) at 40px → ~48px in 68px inner (88−20) ✓
+ "847" (3ch) at 34px → ~61px in 68px inner ✓
+ "2,481" (5ch) at 18px → ~54px in 56px inner (72−16) ✓ */
 .bento-cell--season-wins  .bento-badge__num { font-size: 40px; }
-.bento-cell--laps-led     .bento-badge__num { font-size: 34px; }
+.bento-cell--laps-led .bento-badge__num { font-size: 34px; }
 .bento-cell--total-events .bento-badge__num { font-size: 28px; }
-.bento-cell--miles        .bento-badge__num { font-size: 18px; }
-.bento-cell--heat-wins    .bento-badge__num { font-size: 22px; }
-.bento-cell--podiums      .bento-badge__num { font-size: 22px; }
+.bento-cell--miles  .bento-badge__num { font-size: 18px; }
+.bento-cell--heat-wins  .bento-badge__num { font-size: 22px; }
+.bento-cell--podiums  .bento-badge__num { font-size: 22px; }
 
 /* Badge label — wrapping allowed (necessary for "HEAT WINS" in the 56px SM badge) */
 .bento-badge__label {
@@ -1349,7 +1334,7 @@ img {
   text-align: center;
 }
 
-/* --- News section (Layer 3.5) — Juventus horizontal card scroll --- */
+/* News section (Layer 3.5) — Juventus horizontal card scroll */
 /* PRODUCTION: card data from WRG-PublicApi news endpoint */
 
 .news {
@@ -1499,7 +1484,7 @@ img {
   line-height: 1.1;
 }
 
-/* --- Footer --- */
+/* Footer */
 
 /* 4-col grid: [2fr brand] [1fr series] [1fr explore] [1.2fr connect] */
 .footer-cols {
@@ -1608,13 +1593,11 @@ img {
 }
 
 
-/* ============================================================
-   UTILITIES
-   ============================================================ */
+/* UTILITIES */
 
 /* Oswald metadata label: small caps treatment used for section headings, unit
-   labels, eyebrow context markers. Elements override font-size and letter-spacing
-   locally; they may also override color when the value differs from track-gray. */
+ labels, eyebrow context markers. Elements override font-size and letter-spacing
+ locally; they may also override color when the value differs from track-gray. */
 .u-label {
   font-family: var(--font-label);
   font-weight: 600;
@@ -1630,7 +1613,7 @@ img {
 }
 
 /* Monospace tabular numbers — for any column of figures that must align
-   vertically (standings points, countdown segments, race dates). */
+ vertically (standings points, countdown segments, race dates). */
 .u-mono-num {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
@@ -1649,106 +1632,104 @@ img {
 }
 
 
-/* ============================================================
-   MEDIA QUERIES
-   ============================================================ */
+/* MEDIA QUERIES */
 
 /* Reduced-motion global — html scroll-behavior */
 @media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto;
+  scroll-behavior: auto;
   }
 }
 
 /* Hero: crossfade + dot transitions + Landmark text reveal.
-   Decorative — suppressed under reduced-motion. Auto-advance is NOT suppressed
-   (it is content navigation, not decoration). */
+ Decorative — suppressed under reduced-motion. Auto-advance is NOT suppressed
+ (it is content navigation, not decoration). */
 @media (prefers-reduced-motion: no-preference) {
   .hero__slide {
-    transition: opacity 600ms ease-in-out;
+  transition: opacity 600ms ease-in-out;
   }
 
   .hero__dot {
-    transition: width 200ms ease, background-color 200ms ease;
+  transition: width 200ms ease, background-color 200ms ease;
   }
 
   @keyframes hero-settle {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: none; }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
   }
 
   /* Landmark page-load reveal: eyebrow → headline → CTA (staggered).
-     data-initial on first slide's .hero__content — fires once on load, never re-triggers. */
+ data-initial on first slide's .hero__content — fires once on load, never re-triggers. */
   .hero__content[data-initial] .hero__eyebrow {
-    animation: hero-settle 400ms ease-out both;
+  animation: hero-settle 400ms ease-out both;
   }
 
   .hero__content[data-initial] .hero__name {
-    animation: hero-settle 400ms ease-out both;
-    animation-delay: 80ms;
+  animation: hero-settle 400ms ease-out both;
+  animation-delay: 80ms;
   }
 
   .hero__content[data-initial] .hero__cta {
-    animation: hero-settle 400ms ease-out both;
-    animation-delay: 180ms;
+  animation: hero-settle 400ms ease-out both;
+  animation-delay: 180ms;
   }
 
   /* News heading: Landmark Settle — fires once when section enters viewport */
   .news__heading--visible {
-    animation: hero-settle 400ms ease-out both;
+  animation: hero-settle 400ms ease-out both;
   }
 
   /* News card sweep and border transitions */
   .news__card {
-    transition: border-color 200ms ease;
+  transition: border-color 200ms ease;
   }
 
   .news__card::before {
-    transition: transform 280ms ease;
+  transition: transform 280ms ease;
   }
 
   .news__arrow {
-    transition: border-color 180ms ease, color 180ms ease;
+  transition: border-color 180ms ease, color 180ms ease;
   }
 
-  /* ── RACECAR LAUNCH entrance — Featured floating blocks ──────────────────────
-     Character: a sprint car launching from the groove and braking hard into position.
-     DIRECTION: all blocks enter from the right (+100 px offset) and race right-to-left
-     into their settled positions — regardless of whether they rest on the left or right
-     side of the section. Unified direction of travel, like cars coming down the front stretch.
-     Three-phase anatomy:
-       0 %→80 %  cubic-bezier(0.16,1,0.3,1) — explosive start, violent deceleration.
-                 Block fires from +100 px, decelerates to a -5 px overshoot (left of rest).
-       80%→100%  ease-out — firm, unhurried brake back from overshoot to rest.
-                 This 130 ms settle reads as the car hooking up, not as a rubber bounce.
-     Scale 0.98→1.004→1: block feels like it's arriving toward the viewer (Z-depth).
-     Opacity 0→1 inside phase 1 so the block is fully visible as it overshoots.
-     Duration 650 ms — fast enough to feel mechanical, slow enough to register.
-     NO motion-blur — the curve and travel distance carry the speed, not post-processing.
+  /* RACECAR LAUNCH entrance — Featured floating blocks
+ -Character: a sprint car launching from the groove and braking hard into position.
+ -DIRECTION: all blocks enter from the right (+100 px offset) and race right-to-left
+ into their settled positions — regardless of whether they rest on the left or right
+ side of the section. Unified direction of travel, like cars coming down the front stretch.
+ -Three-phase anatomy:
+ 0 %→80 %  cubic-bezier(0.16,1,0.3,1) — explosive start, violent deceleration.
+ -Block fires from +100 px, decelerates to a -5 px overshoot (left of rest).
+ 80%→100%  ease-out — firm, unhurried brake back from overshoot to rest.
+ -This 130 ms settle reads as the car hooking up, not as a rubber bounce.
+ -Scale 0.98→1.004→1: block feels like it's arriving toward the viewer (Z-depth).
+ -Opacity 0→1 inside phase 1 so the block is fully visible as it overshoots.
+ -Duration 650 ms — fast enough to feel mechanical, slow enough to register.
+ -NO motion-blur — the curve and travel distance carry the speed, not post-processing.
 
-     STAGGER: blocks launch in sequence (~120 ms apart) via animation-delay on nth-child.
-     The delay uses fill-mode backwards (included in 'both') so each block holds at its
-     starting position during its wait; no visible jump when the delay expires.
+ -STAGGER: blocks launch in sequence (~120 ms apart) via animation-delay on nth-child.
+ The delay uses fill-mode backwards (included in 'both') so each block holds at its
+ starting position during its wait; no visible jump when the delay expires.
 
-     HOVER LUNGE: uses CSS `scale` + `translate` properties (separate from `transform`)
-     so they are independent of the animation fill-mode which freezes `transform`.
-     Scale 1→1.02 "blips the throttle"; translate pushes the block inward 4 px. */
+ -HOVER LUNGE: uses CSS `scale` + `translate` properties (separate from `transform`)
+ so they are independent of the animation fill-mode which freezes `transform`.
+ Scale 1→1.02 "blips the throttle"; translate pushes the block inward 4 px. */
 
   @keyframes launch {
-    0% {
-      opacity: 0;
-      transform: translateX(100px) scale(0.98);
-      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    80% {
-      opacity: 1;
-      transform: translateX(-5px) scale(1.004);
-      animation-timing-function: ease-out;
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-    }
+  0% {
+  opacity: 0;
+  transform: translateX(100px) scale(0.98);
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  80% {
+  opacity: 1;
+  transform: translateX(-5px) scale(1.004);
+  animation-timing-function: ease-out;
+  }
+  100% {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  }
   }
 
   /* Pre-launch state: all blocks start offset right, regardless of layout side */
@@ -1756,19 +1737,19 @@ img {
 
   /* Single animation for all blocks — entrance direction is right-to-left for all */
   .floating-block.floating-block--visible .floating-block__card {
-    animation: launch 650ms linear both;
+  animation: launch 650ms linear both;
   }
 
   /* Stagger: delay per DOM position so blocks launch in sequence, not simultaneously */
-  .floating-block:nth-child(1).floating-block--visible .floating-block__card { animation-delay:   0ms; }
+  .floating-block:nth-child(1).floating-block--visible .floating-block__card { animation-delay: 0ms; }
   .floating-block:nth-child(2).floating-block--visible .floating-block__card { animation-delay: 120ms; }
   .floating-block:nth-child(3).floating-block--visible .floating-block__card { animation-delay: 240ms; }
   .floating-block:nth-child(4).floating-block--visible .floating-block__card { animation-delay: 360ms; }
 
   /* Hover lunge — snappy throttle-blip on hover/focus-within.
-     `scale` and `translate` are independent of the animation's `transform` fill state. */
+ `scale` and `translate` are independent of the animation's `transform` fill state. */
   .floating-block__card {
-    transition: scale 180ms ease-out, translate 180ms ease-out;
+  transition: scale 180ms ease-out, translate 180ms ease-out;
   }
 
   .floating-block--left  .floating-block__card:hover,
@@ -1779,77 +1760,77 @@ img {
 
   /* Standings + Season Stats headings: scroll-triggered Landmark Settle */
   @keyframes section-settle {
-    from { opacity: 0; transform: translateY(40px); }
-    to   { opacity: 1; transform: none; }
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: none; }
   }
 
   .standings__heading--visible,
   .season-stats__heading--visible {
-    animation: section-settle 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: section-settle 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
   /* Standings Settle-In Reveal: grayscale → color + fade + rise.
-     Cards are visible by default (reduced-motion gets them immediately).
-     Under no-preference, cards start hidden; JS adds --revealed to trigger.
-     P2→P1→P3 order via animation-delay — center arrives last, with weight. */
+ Cards are visible by default (reduced-motion gets them immediately).
+ Under no-preference, cards start hidden; JS adds --revealed to trigger.
+ P2→P1→P3 order via animation-delay — center arrives last, with weight. */
   @keyframes settle-in {
-    from { filter: grayscale(1); opacity: 0; transform: translateY(16px); }
-    to   { filter: grayscale(0); opacity: 1; transform: none; }
+  from { filter: grayscale(1); opacity: 0; transform: translateY(16px); }
+  to { filter: grayscale(0); opacity: 1; transform: none; }
   }
 
   .standings__card {
-    filter: grayscale(1);
-    opacity: 0;
-    transform: translateY(16px);
+  filter: grayscale(1);
+  opacity: 0;
+  transform: translateY(16px);
   }
 
   .standings__card--revealed {
-    animation: settle-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: settle-in 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .standings__card--p2.standings__card--revealed { animation-delay:   0ms; }
+  .standings__card--p2.standings__card--revealed { animation-delay: 0ms; }
   .standings__card--p1.standings__card--revealed { animation-delay:  90ms; }
   .standings__card--p3.standings__card--revealed { animation-delay: 180ms; }
 }
 
 /* Intermediate breakpoint: collapse 4-col bento to 2-col when the content channel
-   is too narrow for the full layout. At ≤ 1279px viewport (with 320px rail + 96px
-   padding = 416px overhead), the available bento width drops to ≤ 863px, making
-   4-col cells too narrow. Simplify to a clean 2-col layout; Season Wins spans
-   full width to preserve its hero role. Stagger transforms are removed. */
+ is too narrow for the full layout. At ≤ 1279px viewport (with 320px rail + 96px
+ padding = 416px overhead), the available bento width drops to ≤ 863px, making
+ 4-col cells too narrow. Simplify to a clean 2-col layout; Season Wins spans
+ full width to preserve its hero role. Stagger transforms are removed. */
 @media (max-width: 1279px) {
   .season-stats__bento {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 260px 200px 200px 180px;
-    gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 260px 200px 200px 180px;
+  gap: 16px;
   }
 
   /* Explicit 2-col placements */
   .bento-cell--season-wins  { grid-column: 1 / 3; grid-row: 1; }
-  .bento-cell--laps-led     { grid-column: 1;     grid-row: 2; transform: none; }
-  .bento-cell--heat-wins    { grid-column: 2;     grid-row: 2; height: auto; align-self: stretch; }
-  .bento-cell--miles        { grid-column: 1;     grid-row: 3; }
-  .bento-cell--total-events { grid-column: 2;     grid-row: 3; transform: none; }
-  .bento-cell--podiums      { grid-column: 1 / 3; grid-row: 4; height: auto; align-self: stretch; }
+  .bento-cell--laps-led { grid-column: 1; grid-row: 2; transform: none; }
+  .bento-cell--heat-wins  { grid-column: 2; grid-row: 2; height: auto; align-self: stretch; }
+  .bento-cell--miles  { grid-column: 1; grid-row: 3; }
+  .bento-cell--total-events { grid-column: 2; grid-row: 3; transform: none; }
+  .bento-cell--podiums  { grid-column: 1 / 3; grid-row: 4; height: auto; align-self: stretch; }
 
   /* Scale XL badges down; md and sm unchanged */
   .bento-badge--xl { width: 72px; height: 72px; padding: 8px; }
   .bento-cell--season-wins .bento-badge__num { font-size: 32px; }
-  .bento-cell--laps-led    .bento-badge__num { font-size: 26px; }
+  .bento-cell--laps-led  .bento-badge__num { font-size: 26px; }
 }
 
 /* Footer 2-col: at 950px viewport the 320px rail + 96px padding leaves only
-   534px content channel — 4 equal cols collapse too narrow for link labels. */
+ 534px content channel — 4 equal cols collapse too narrow for link labels. */
 @media (max-width: 950px) {
   .footer-cols {
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
   }
   .footer-col--brand {
-    grid-column: 1 / -1;
+  grid-column: 1 / -1;
   }
   .footer-brand-desc {
-    max-width: none;
+  max-width: none;
   }
 }
 
@@ -1858,152 +1839,152 @@ img {
 
   /* Rail hidden on mobile — data moves to nav-drawer */
   .rail {
-    display: none;
+  display: none;
   }
 
   /* Pill becomes full-width flat top bar */
   .pill-header {
-    left: 0;
-    top: 0;
-    padding: 0;
-    background: var(--dc-black);
-    border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
+  left: 0;
+  top: 0;
+  padding: 0;
+  background: var(--dc-black);
+  border-bottom: 1px solid color-mix(in srgb, var(--dc-track-gray) 18%, transparent);
   }
 
   .pill-header__inner {
-    border-radius: 0;
-    border: none;
-    background: var(--dc-black);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    max-width: none;
-    width: 100%;
-    height: var(--mobile-bar-h);
-    padding: 0 16px;
-    justify-content: space-between;
-    /* No transition on mobile — state is static, not toggled */
-    transition: none;
-    overflow: visible;
+  border-radius: 0;
+  border: none;
+  background: var(--dc-black);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  max-width: none;
+  width: 100%;
+  height: var(--mobile-bar-h);
+  padding: 0 16px;
+  justify-content: space-between;
+  /* No transition on mobile — state is static, not toggled */
+  transition: none;
+  overflow: visible;
   }
 
   /* Force collapsed visual state on mobile */
   .pill-header__logomark {
-    max-width: 80px;
-    opacity: 1;
-    pointer-events: auto;
-    transition: none;
+  max-width: 80px;
+  opacity: 1;
+  pointer-events: auto;
+  transition: none;
   }
 
   .pill-nav {
-    display: none;
+  display: none;
   }
 
   .pill-header__hamburger {
-    max-width: 44px;
-    opacity: 1;
-    pointer-events: auto;
-    transition: none;
+  max-width: 44px;
+  opacity: 1;
+  pointer-events: auto;
+  transition: none;
   }
 
   /* WATCH LIVE visible on mobile when live */
   .pill-header--has-live .pill-watch-live {
-    max-width: 180px;
-    opacity: 1;
-    pointer-events: auto;
-    transition: none;
+  max-width: 180px;
+  opacity: 1;
+  pointer-events: auto;
+  transition: none;
   }
 
   /* Content channel: full width, clear the top bar */
   .content-channel {
-    margin-left: 0;
-    padding-top: var(--mobile-bar-h);
+  margin-left: 0;
+  padding-top: var(--mobile-bar-h);
   }
 
   .site-footer {
-    margin-left: 0;
-    padding: 40px 24px 48px;
+  margin-left: 0;
+  padding: 40px 24px 48px;
   }
 
   /* Hero: reduced height + typography adjustments for mobile */
   .hero {
-    height: calc(100vh - var(--mobile-bar-h));
+  height: calc(100vh - var(--mobile-bar-h));
   }
 
   .hero__name {
-    font-size: 48px;
+  font-size: 48px;
   }
 
   .hero__content {
-    left: 24px;
-    right: 24px;
-    bottom: 60px;
+  left: 24px;
+  right: 24px;
+  bottom: 60px;
   }
 
   /* News: tighter padding + smaller heading on narrow viewports */
   .news__inner {
-    padding: 40px 24px 48px;
+  padding: 40px 24px 48px;
   }
 
   .news__heading {
-    font-size: 32px;
+  font-size: 32px;
   }
 
   /* Floating blocks: full-width single column; right blocks reset to left-aligned */
   .floating-blocks__header {
-    padding: 0 24px;
-    margin-bottom: 24px;
+  padding: 0 24px;
+  margin-bottom: 24px;
   }
 
   .floating-blocks {
-    padding: 56px 0 72px;
+  padding: 56px 0 72px;
   }
 
   .floating-blocks__inner {
-    padding: 0 24px;
-    gap: 40px;
+  padding: 0 24px;
+  gap: 40px;
   }
 
   .floating-block--right {
-    justify-content: flex-start;
+  justify-content: flex-start;
   }
 
   .floating-block__card {
-    width: 100%;
-    padding: 28px 28px 32px;
+  width: 100%;
+  padding: 28px 28px 32px;
   }
 
   /* Recalculate bleed margins to match mobile card padding (28px top, 28px sides) */
   .floating-block__photo {
-    margin: -28px -28px 20px;
-    height: 180px;
+  margin: -28px -28px 20px;
+  height: 180px;
   }
 
   .floating-block--right .floating-block__card {
-    border-right: none;
-    border-left: 3px solid color-mix(in srgb, var(--brand-primary) 65%, transparent);
+  border-right: none;
+  border-left: 3px solid color-mix(in srgb, var(--brand-primary) 65%, transparent);
   }
 
   .floating-block__headline {
-    font-size: 26px;
+  font-size: 26px;
   }
 
 
   /* Season Stats bento: compact 2-col grid on mobile (no rail, full viewport width).
-     Same 4-row structure as the intermediate breakpoint but shorter row heights
-     and tighter gaps to fit the narrower mobile viewport. */
+ Same 4-row structure as the intermediate breakpoint but shorter row heights
+ and tighter gaps to fit the narrower mobile viewport. */
   .season-stats__inner {
-    padding: 48px 20px 56px;
+  padding: 48px 20px 56px;
   }
 
   .season-stats__heading {
-    font-size: 32px;
-    margin-bottom: 32px;
+  font-size: 32px;
+  margin-bottom: 32px;
   }
 
   /* grid-template-columns and cell placements cascade unchanged from max-width:1279px */
   .season-stats__bento {
-    grid-template-rows: 200px 160px 160px 130px;
-    gap: 12px;
+  grid-template-rows: 200px 160px 160px 130px;
+  gap: 12px;
   }
 
   /* Scale all badge tiers down for narrow mobile cells */
@@ -2011,25 +1992,25 @@ img {
   .bento-badge--md { width: 52px; height: 52px; padding: 6px; }
   .bento-badge--sm { width: 44px; height: 44px; padding: 5px; }
   .bento-cell--season-wins  .bento-badge__num { font-size: 24px; }
-  .bento-cell--laps-led     .bento-badge__num { font-size: 20px; }
+  .bento-cell--laps-led .bento-badge__num { font-size: 20px; }
   .bento-cell--total-events .bento-badge__num { font-size: 22px; }
-  .bento-cell--miles        .bento-badge__num { font-size: 15px; }
-  .bento-cell--heat-wins    .bento-badge__num { font-size: 18px; }
-  .bento-cell--podiums      .bento-badge__num { font-size: 18px; }
+  .bento-cell--miles  .bento-badge__num { font-size: 15px; }
+  .bento-cell--heat-wins  .bento-badge__num { font-size: 18px; }
+  .bento-cell--podiums  .bento-badge__num { font-size: 18px; }
 
   /* Standings: single-column stack on mobile, P1 first */
   .standings__inner {
-    padding: 40px 24px 0;
+  padding: 40px 24px 0;
   }
 
   .standings__heading {
-    font-size: 36px;
-    margin-bottom: 28px;
+  font-size: 36px;
+  margin-bottom: 28px;
   }
 
   .standings__podium {
-    flex-direction: column;
-    align-items: stretch;
+  flex-direction: column;
+  align-items: stretch;
   }
 
   .standings__card--p1 { order: 1; flex: none; height: 380px; }
@@ -2038,32 +2019,30 @@ img {
 
   /* Footer: single column + tighter spacing on mobile */
   .footer-cols {
-    grid-template-columns: 1fr;
-    gap: 28px;
+  grid-template-columns: 1fr;
+  gap: 28px;
   }
   .footer-col--brand {
-    grid-column: auto; /* reset 950px span */
+  grid-column: auto; /* reset 950px span */
   }
   .footer-brand-desc {
-    max-width: none;
+  max-width: none;
   }
   .footer-social {
-    margin-bottom: 32px;
+  margin-bottom: 32px;
   }
   .footer-bottom {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
   }
 }
 
 
-/* ============================================================
-   DEV MODE PANEL
-   Team review tool — fixed overlay, not part of production.
-   Deliberately styled outside the site's brand token system
-   so it reads as a distinct tool layer at a glance.
-   ============================================================ */
+/* DEV MODE PANEL
+ Team review tool — fixed overlay, not part of production.
+ Deliberately styled outside the site's brand token system
+ so it reads as a distinct tool layer at a glance. */
 
 .devpanel {
   position: fixed;
