@@ -4,8 +4,7 @@ A homepage redesign prototype for a World Racing Group motorsports brand
 site (World of Outlaws / DIRTcar Racing), built in two stages: a static
 HTML/CSS/JS design prototype, then a converted WordPress theme.
 
-**[View the static prototype live](#)** · *(add a hosted link here, or open
-`static-prototype/index.html` locally)*
+**[View the static prototype live](https://wrg-site-demo.vercel.app)** · *(or open `static-prototype/index.html` locally)*
 
 ## Why two folders
 
@@ -47,3 +46,5 @@ dependencies).
 WordPress theme: PHP template parts following the standard WP template
 hierarchy, `wp_nav_menu()` for navigation, the Customizer API for the
 brand-skin setting, and the same CSS/JS ported over unchanged.
+
+<!-- Deployment test -->
