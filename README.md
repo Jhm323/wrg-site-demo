@@ -6,17 +6,16 @@ HTML/CSS/JS design prototype, then a converted WordPress theme.
 
 **[View the static prototype live](https://wrg-site-demo.vercel.app)** · *(or open `static-prototype/index.html` locally)*
 
-## Why two folders
+## Two folders
 
 | Folder | What it shows |
 |---|---|
 | [`static-prototype/`](./static-prototype) | The original design/interaction work — vanilla HTML, CSS, and JS. No build step, no dependencies. Open `index.html` in a browser. |
 | [`wp-theme/dirtcar-prototype/`](./wp-theme/dirtcar-prototype) | The same page rebuilt as an installable WordPress theme — PHP template parts, WP nav menus, a Customizer-driven brand-skin setting, and a swappable data layer designed to be pointed at a real API. See its own README for setup. |
 
-They're kept side by side on purpose: the static folder is the fastest way
+They're kept side by side: the static folder is the fastest way
 to see the design and interaction work in isolation (open one file, no
-WordPress needed); the theme folder is the version meant to actually run on
-a WordPress site.
+WordPress needed); the theme folder is the version meant to run on a WordPress site.
 
 ## The design
 
@@ -46,5 +45,3 @@ dependencies).
 WordPress theme: PHP template parts following the standard WP template
 hierarchy, `wp_nav_menu()` for navigation, the Customizer API for the
 brand-skin setting, and the same CSS/JS ported over unchanged.
-
-<!-- Deployment test -->
